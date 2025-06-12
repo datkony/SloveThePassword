@@ -81,14 +81,18 @@ function buyRandomNumber() {
 // So sánh
 
 function compareExpression() {
+    let isEvalError = false;
+
     try {
         let latex1 = document.getElementById("expression1").value;
         let latex2 = document.getElementById("expression2").value;
 
         checkExpression(latex1,latex2);
 
+        isEvalError = true;
         let result1 = eval(exchangeLetterToNumber(latex1));
         let result2 = eval(latex2);
+        isEvalError = false;
 
         pricePay(compareExpressionCost);
         if (result1 > result2) {
@@ -101,6 +105,10 @@ function compareExpression() {
 
         document.getElementById("throwError1").innerHTML = "";
     } catch(err) {
+        if (isEvalError) {
+            err = "Không thể thực hiện tính toán các biểu thức vừa nhập.";
+        }
+        
         document.getElementById("throwError1").innerHTML = "Không hợp lệ! " + err;
     }
 }
