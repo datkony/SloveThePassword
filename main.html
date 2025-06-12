@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Code</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <h1>Truy tìm mật mã</h1>
+    <pre id="introduction">
+Mật mã là một số trong đoạn từ 0 đến 9999 đã bị ẩn dưới dạng <b>abcd</b> với a, b, c, d đều là 4 chữ số trong đoạn từ 0 đến 9
+Hãy sử dụng <b>các chữ số trên cùng với các chữ số từ tập số hiện tại</b> cho ba công cụ <b>SO SÁNH, GHÉP SỐ, ĐỐI CHIẾU</b> để tìm ra các manh mối từ đó giải được mật mã 
+trong thời gian và số lượt nhập quy định! (Lưu ý: hãy sử dụng công cụ thật khôn ngoan vì <b>mọi công cụ sẽ đều phải trả giá bằng số thời gian còn lại</b>)
+    </pre>
+
+    <div>
+        <button id="status" onclick="changeStatus()">Start</button>
+        <p id="timer"></p>
+    </div>
+
+    <div class="container">
+        <div class="firstColumn">
+            <div id="currentnumber">
+                <h2>Tập số hiện tại</h2>
+                <p>Lưu ý: Ở mỗi lần thực hiện công cụ,<br> mỗi vị trí chỉ được sử dụng một lần duy nhất.</p>
+                <p id="startIntro"></p>
+                <p id="player-numbers"></p>
+            </div>
+
+            <div id="buy" class="slide active">
+                <h2 id="changeCost">Mua số</h2>
+                <button class="actionButton" id="buyNumberButton" onclick="buyRandomNumber()">Mua một chữ số ngẫu nhiên</button>
+                <div id="remainingbuy"></div>
+                <div id="throwError4"></div>
+            </div>
+
+            <div id="typeAnswer">
+                <h2>Nhập đáp án</h2>
+                <input type="number" id="answer" min="0" max="9999">
+                <button class="actionButton" id="submitButton" onclick="submitTheAnswer()">submit</button>
+                <div id="submitAnswer"></div>
+                <div id="remainingsubmit"></div>
+            </div>
+        </div>
+
+        <div class="tool">
+            <div class="nav">
+                <button id="tab1" onclick="showSlide(1)"></button>
+                <button id="tab2" onclick="showSlide(2)"></button>
+                <button id="tab3" onclick="showSlide(3)"></button>
+            </div>
+            
+            <div class="content">
+                <div id="introContent">
+                    <p>Hãy lựa chọn một công cụ<br>để xem cách thức và sử dụng nó</p>
+                </div>
+
+                <div id="compareExpression" class="slide">
+                    <p>Nhập hai biểu thức cộng, trừ, nhân, trong đó một biểu thức sử dụng 2-3 chữ số trong mật mã (a,b,c,d)
+                    và biểu thức còn lại gồm 2-3 chữ số trong tập số hiện tại
+                    để nhận được kết quả so sánh giữa hai biểu thức (lớn hơn, nhỏ hơn, bằng)<br>
+                    Lưu ý:<br>
+                    - Số chữ số được sử dụng ở hai biểu thức phải bằng nhau<br>
+                    - Không được ghép bất kỳ 2 chữ số trở lên nào để tạo thành số mới<br><br></p>
+
+                    <div>
+                        <label>Nhập biểu thức 1 (gồm các chữ số ở mật mã):<br></label>
+                        <input type="text" id="expression1"><br><br>
+                    </div>
+
+                    <div>
+                        <label>Nhập biểu thức 2 (gồm các chữ số ở tập số hiện tại):<br></label>
+                        <input type="text" id="expression2"><br><br>
+                    </div>
+
+                    <button class="actionButton" id="compare" onclick="compareExpression()">So sánh 2 biểu thức</button>
+                    <div id="throwError1"></div>
+                </div>
+                
+                <div id="checkProperties" class="slide">
+                    <p>Tạo một số có từ 2 đến 4 chữ số gồm các chữ số ở trong mật mã (a, b, c, d) hoặc ở trong tập số hiện tại
+                    để nhận được tính chất của số đó (chính phương, nguyên tố, hoàn hảo, không thuộc cả 3 loại trên)<br>
+                    Lưu ý: Số được tạo phải có ít nhất 2 chữ số từ mật mã<br><br></p>
+                    <label>Nhập số tạo được:</label>
+                    <input type="text" id="numToCheckProperties">
+                    <button class="actionButton" id="checkPropertiesButton" onclick="checkProperties()">Kiểm tra tính chất</button>
+                    <div id="throwError2"></div>
+                </div>
+                
+                <div id="matchCode" class="slide">
+                    <p>Tạo một số có từ 2 đến 4 chữ số gồm các chữ số ở trong tập số hiện tại
+                    để đối chiếu với mật mã và nhận được số chữ số đúng và ở đúng vị trí, số chữ số đúng nhưng ở sai vị trí<br><br></p>
+                    <label>Nhập số tạo được:</label>
+                    <input type="text" id="match-input" maxlength="4">
+                    <button class="actionButton" id="matchCodeButton" onclick="matchCode()">Đối chiếu</button>
+                    <div id="throwError3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="searchBox">
+            <h2>Kết quả thu được:</h2>
+            <br>
+            <div id="searchLog"></div>
+        </div>
+    </div>
+
+    <div id="allScreen">
+        <div id="result-popup">
+            <h1 id="result-title"></h1>
+            <p id="result-content"></p>
+            <p id="correctAnswer"></p>
+            <button id="closePopup" onclick="closePopup()">Đóng</button>
+        </div>
+    </div>
+        
+    <script src="main.js"></script>
+</body>
+</html>
