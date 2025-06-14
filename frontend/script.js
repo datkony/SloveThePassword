@@ -38,7 +38,7 @@ lockScreen();
 //Làm sạch tập số hiện tại và cấp phát các chữ số miễn phí mới
 async function freeNumber() {
     try {
-        const response = await fetch('http://slove-the-password-backend.onrender.com/removeAllAvailableNumbers', {
+        const response = await fetch('https://slove-the-password-backend.onrender.com/removeAllAvailableNumbers', {
             method: 'POST',
         });
 
@@ -66,7 +66,7 @@ async function addAvailableNumbers() {
         let newNumber = Math.round(Math.random() * 8) + 1
         availableNumbers.push(newNumber);
 
-        const response = await fetch('http://slove-the-password-backend.onrender.com/pushAvailableNumbers', {
+        const response = await fetch('https://slove-the-password-backend.onrender.com/pushAvailableNumbers', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -122,7 +122,7 @@ async function compareExpression() {
         let latex1 = document.getElementById("expression1").value;
         let latex2 = document.getElementById("expression2").value;
 
-        const response = await fetch('http://slove-the-password-backend.onrender.com/compareExpressions', {
+        const response = await fetch('https://slove-the-password-backend.onrender.com/compareExpressions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -175,7 +175,7 @@ async function checkProperties() {
     try {
         let input = document.getElementById("numToCheckProperties").value;
 
-        const response = await fetch('http://slove-the-password-backend.onrender.com/checkProperties', {
+        const response = await fetch('https://slove-the-password-backend.onrender.com/checkProperties', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -215,7 +215,7 @@ async function matchCode() {
     try {
         let inputCode = document.getElementById("match-input").value;
 
-        const response = await fetch('http://slove-the-password-backend.onrender.com/matchCode', {
+        const response = await fetch('https://slove-the-password-backend.onrender.com/matchCode', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -253,7 +253,7 @@ async function submitTheAnswer() {
         document.getElementById("submitAnswer").innerHTML = "Không hợp lệ. Mật mã phải nằm trong đoạn từ 0 đến 9999!";
     } else {
         try {
-            const response = await fetch('http://slove-the-password-backend.onrender.com/check', {
+            const response = await fetch('https://slove-the-password-backend.onrender.com/check', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -355,7 +355,7 @@ async function popupResult(isWon) {
     let correctAnswer = -1;
 
     try {
-        const response = await fetch('http://slove-the-password-backend.onrender.com/secret');
+        const response = await fetch('https://slove-the-password-backend.onrender.com/secret');
         const data = await response.json();
         correctAnswer = data.secret;
     } catch (error) {
@@ -482,7 +482,7 @@ function pricePay(cost) {
 }
 
 async function generateNewSecretCode() {
-    const response = await fetch('http://slove-the-password-backend.onrender.com/generate', {
+    const response = await fetch('https://slove-the-password-backend.onrender.com/generate', {
         method: 'POST',
     });
 
