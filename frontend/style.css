@@ -187,3 +187,7 @@ h1 {
     padding: 3px;
     width: 90px;
 }
+
+#closePopup:hover {
+    opacity: 0.6;
+}

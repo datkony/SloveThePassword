@@ -7,17 +7,18 @@ This project uses a **monorepo** structure and is deployed on [Render](https://r
 
 ## 🗂 Project Structure
 
-SloveThePassword/
-├── backend/ # Node.js + Express server
-│ ├── server.js
+```
+SloveThePassword
+├── backend
+│ ├── index.js
 │ ├── package.json
-│ └── ...
-├── frontend/ # Static HTML/CSS/JS game
+│ └── .env
+├── frontend
 │ ├── index.html
 │ ├── script.js
-│ ├── style.css
-│ └── ...
+│ └──  style.css
 └── README.md
+```
 
 ---
 
@@ -37,3 +38,10 @@ SloveThePassword/
 ```bash
 git clone https://github.com/datkony/SloveThePassword
 cd SloveThePassword
+```
+
+### 2. Run
+
+```bash
+start frontend/index.html
+```
