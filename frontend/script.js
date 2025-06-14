@@ -131,18 +131,19 @@ async function compareExpression() {
         });
 
         const result = await response.json();
+        const message = result.message;
         
-        if (result.message == 'expression 1 value bigger') {
+        if (message == 'expression 1 value bigger') {
             pricePay(compareExpressionCost);
             addSearchResult(standarlizationExpression(latex1) + " &gt " + standarlizationExpression(latex2));
-        } else if (result.message == 'expression 2 value bigger') {
+        } else if (message == 'expression 2 value bigger') {
             pricePay(compareExpressionCost);
             addSearchResult(standarlizationExpression(latex1) + " &lt " + standarlizationExpression(latex2));
-        } else if (result.message == '2 expressions value are equal') {
+        } else if (message == '2 expressions value are equal') {
             pricePay(compareExpressionCost);
             addSearchResult(standarlizationExpression(latex1) + " = " + standarlizationExpression(latex2));
         } else {
-            throw result.message;
+            throw message;
         }
 
         document.getElementById("throwError1").innerHTML = "";
@@ -184,21 +185,22 @@ async function checkProperties() {
         });
 
         const result = await response.json();
+        const message = result.message;
 
-        if (result == 'số chính phương') {
+        if (message == 'số chính phương') {
             pricePay(checkPropertiesCost);
             addSearchResult(input + " là một số chính phương.");
-        } else if (result.message == 'số hoàn hảo') {
+        } else if (message == 'số hoàn hảo') {
             pricePay(checkPropertiesCost);
             addSearchResult(input + " là một số hoàn hảo.");
-        } else if (result.message == 'số nguyên tố') {
+        } else if (message == 'số nguyên tố') {
             pricePay(checkPropertiesCost);
             addSearchResult(input + " là một số nguyên tố.");
-        } else if (result.message == 'không là gì cả') {
+        } else if (message == 'không là gì cả') {
             pricePay(checkPropertiesCost);
             addSearchResult(input + " đều không phải số chính phương, hoàn hảo hay số nguyên tố.");
         } else {
-            throw result.message;
+            throw message;
         }
         
         document.getElementById("throwError2").innerHTML = "";
