@@ -1,10 +1,10 @@
 const timesForEachPlay = 600;
 const compareExpressionCost = 20;
 const checkPropertiesCost = 15;
-const matchCodeCost = 60;
-const buyNumberCost = [30, 45, 60]; //Giá cho mỗi lần mua chữ số
+const matchCodeCost = 30;
+const buyNumberCost = [60, 90]; //Giá cho mỗi lần mua chữ số
 const maxNumOfSubmitAnswerTurn = 3;
-const numOfFreeNumbers = 3;
+const numOfFreeNumbers = 4;
 
 let numOfSecondLeft = timesForEachPlay;
 let isPlaying = false;
