@@ -21,7 +21,7 @@ let isMatchCodeIntroDisplay = false;
 firstGenerateNewSecretCode();
 
 freeNumber();
-document.getElementById("startIntro").innerHTML = "Các chữ số trong tập sẽ xuất hiện ở đây<br/>Khi bắt đầu, bạn sẽ được phát miễn phí<br/>" 
+document.getElementById("startIntro").innerHTML = "Các chữ số trong tập sẽ xuất hiện ở đây<br/>Khi bắt đầu, bạn sẽ được phát miễn phí " 
                                                 + numOfFreeNumbers + " chữ số làm khởi điểm";
 
 document.getElementById("compareExpression").style.display = "none";
@@ -108,11 +108,11 @@ function buyRandomNumber() {
         pricePay(buyNumberCost[buyNumberCost.length - numOfBuyRemaining]);
 
         if (numOfBuyRemaining == 1){
-            document.getElementById("changeCost").innerHTML = "Mua số";
+            document.getElementById("buyNumberButton").innerHTML = "Mua";
             document.getElementById("buyNumberButton").style.display = "none";
         } else { 
             let buyNumberCostNext = buyNumberCost[buyNumberCost.length + 1 - numOfBuyRemaining];
-            document.getElementById("changeCost").innerHTML = "Mua số (Giá: " + buyNumberCostNext + "s)";
+            document.getElementById("buyNumberButton").innerHTML = "Mua (Giá: " + buyNumberCostNext + "s)";
         }
 
         numOfBuyRemaining--;
@@ -343,9 +343,9 @@ function changeStatus() {
 
             document.getElementById("timer").innerHTML = "Thời gian còn lại: " + numOfSecondLeft + "s";
 
-            document.getElementById("changeCost").innerHTML = "Mua số";
+            document.getElementById("buyNumberButton").innerHTML = "Mua";
             document.getElementById("buyNumberButton").style.display = "block";
-            document.getElementById("buyNumberButton").style.marginLeft = "70px";
+            document.getElementById("buyNumberButton").style.marginLeft = "22.5%";
             
             document.getElementById("expression1").placeholder = "";
             document.getElementById("expression2").placeholder = "";
@@ -360,7 +360,7 @@ function changeStatus() {
             document.getElementById("player-numbers").innerText = availableNumbers.join(" ");
             document.getElementById("startIntro").style.display = "none";
 
-            document.getElementById("changeCost").innerHTML = "Mua số (Giá: " + buyNumberCost[0] + "s)";
+            document.getElementById("buyNumberButton").innerHTML = "Mua (Giá: " + buyNumberCost[0] + "s)";
 
             document.getElementById("expression1").placeholder = "ví dụ: a + b";
             document.getElementById("expression2").placeholder = "ví dụ: " + availableNumbers[0] + " * " + availableNumbers[1];

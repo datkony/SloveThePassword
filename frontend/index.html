@@ -8,19 +8,19 @@
 </head>
 <body>
     <h1>Truy tìm mật mã</h1>
-    <pre id="introduction1">
-Mật mã là một số trong đoạn từ 0 đến 9999 đã bị ẩn dưới dạng <b>abcd</b> với a, b, c, d là các chữ số trong đoạn từ 0 đến 9
-Hãy sử dụng <b>các chữ số trên cùng với các chữ số từ tập số hiện tại</b> cho ba công cụ <b>SO SÁNH, GHÉP SỐ, ĐỐI CHIẾU</b> 
-để tìm ra các manh mối từ đó giải được mật mã trong thời gian và số lượt nhập quy định! 
-    </pre>
-    <pre id="introduction2">
-Lưu ý:                                                                                                      
-    - Mỗi lượt sử dụng công cụ sẽ bị <b>trừ đi một lượng thời gian bằng giá của công cụ đó</b>
-    - Mỗi lần sử dụng công cụ <b>chỉ được phép dùng các chữ số có sẵn trong mật mã và tập số hiện tại</b>, 
-    với <b>số lần sử dụng của mỗi chữ số không vượt quá số lần xuất hiện của chúng</b> trong hai tập đó.
-        (ví dụ: Nếu tập số hiện tại là 1123 thì được sử dụng tối đa hai chữ số 1, một chữ số 2, một chữ số 3, 
+    <p id="introduction1">
+Mật mã là một số trong đoạn từ 0 đến 9999 đã bị ẩn dưới dạng <b>abcd</b> với a, b, c, d là các chữ số trong đoạn từ 0 đến 9<br>
+Hãy sử dụng <b>các chữ số trên cùng với các chữ số từ tập số hiện tại</b> cho ba công cụ <b>SO SÁNH, GHÉP SỐ, ĐỐI CHIẾU</b><br>
+để tìm ra các manh mối từ đó giải được mật mã trong thời gian và số lượt nhập quy định!
+    </p>
+    <p id="introduction2">
+Lưu ý:<br>
+    - Mỗi lượt sử dụng công cụ sẽ bị <b>trừ đi một lượng thời gian bằng giá của công cụ đó</b><br>
+    - Mỗi lần sử dụng công cụ <b>chỉ được phép dùng các chữ số có sẵn trong mật mã và tập số hiện tại</b>,
+    với <b>số lần sử dụng của mỗi chữ số không vượt quá số lần xuất hiện của chúng</b> trong hai tập đó.<br>
+        (ví dụ: Nếu tập số hiện tại là 1123 thì được sử dụng tối đa hai chữ số 1, một chữ số 2, một chữ số 3,
         và không được sử dụng các chữ số khác ba chữ số trên)
-    </pre>
+    </p>
 
     <div>
         <button id="status" onclick="changeStatus()">Start</button>
@@ -36,8 +36,8 @@ Lưu ý:
             </div>
 
             <div id="buy" class="slide active">
-                <h2 id="changeCost">Mua số</h2>
-                <button class="actionButton" id="buyNumberButton" onclick="buyRandomNumber()">Mua một chữ số ngẫu nhiên</button>
+                <h2>Mua một<br>chữ số ngẫu nhiên</h2>
+                <button class="actionButton" id="buyNumberButton" onclick="buyRandomNumber()">Mua</button>
                 <div id="remainingbuy"></div>
                 <div id="throwError4"></div>
             </div>
@@ -45,7 +45,7 @@ Lưu ý:
             <div id="typeAnswer">
                 <h2>Nhập đáp án</h2>
                 <input type="number" id="answer" min="0" max="9999">
-                <button class="actionButton" id="submitButton" onclick="submitTheAnswer()">submit</button>
+                <button class="actionButton" id="submitButton" onclick="submitTheAnswer()">&#8629</button>
                 <div id="submitAnswer"></div>
                 <div id="remainingsubmit"></div>
             </div>
@@ -60,7 +60,7 @@ Lưu ý:
             
             <div class="content">
                 <div id="introContent">
-                    <p>Hãy lựa chọn một công cụ<br>để xem cách thức và sử dụng nó</p>
+                    <p>Hãy lựa chọn một công cụ để xem cách thức và sử dụng nó</p>
                 </div>
 
                 <div id="compareExpression" class="slide">
