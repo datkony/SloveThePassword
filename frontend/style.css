@@ -3,8 +3,15 @@ h1 {
     margin-top: 0px;
 }
 
-#introduction {
+#introduction1 {
     text-align: center;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+#introduction2 {
+    margin-left: 20%;
     margin-top: 0px;
     margin-bottom: 10px;
     font-size: 15px;

@@ -5,6 +5,12 @@ This project uses a **monorepo** structure and is deployed on [Render](https://r
 
 ---
 
+## Author
+
+Nguyễn Hoàng Đạt
+
+---
+
 ## 🗂 Project Structure
 
 ```

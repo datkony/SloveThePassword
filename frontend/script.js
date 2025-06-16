@@ -24,8 +24,9 @@ document.getElementById("compareExpression").style.display = "none";
 document.getElementById("checkProperties").style.display = "none";
 document.getElementById("matchCode").style.display = "none";
 document.getElementById("introContent").style.display = "block";
-document.getElementById("remainingbuy").innerHTML = "Số lượt mua còn lại: " + numOfBuyRemaining; 
-document.getElementById("remainingsubmit").innerHTML = "Số lượt nhập còn lại: " + numOfSubmitRemaining;
+
+document.getElementById("remainingbuy").innerHTML = "Còn " + numOfBuyRemaining + " lượt"; 
+document.getElementById("remainingsubmit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
 document.getElementById("timer").innerHTML = "Thời gian còn lại: " + numOfSecondLeft + "s";
 
 document.getElementById("tab1").innerHTML = "So sánh<br/>(Giá: " + compareExpressionCost + "s)";
@@ -109,7 +110,7 @@ function buyRandomNumber() {
         numOfBuyRemaining--;
         addAvailableNumbers();
         document.getElementById("player-numbers").innerText = availableNumbers.join(" ");
-        document.getElementById("remainingbuy").innerHTML = "Số lượt mua còn lại: " + numOfBuyRemaining;
+        document.getElementById("remainingbuy").innerHTML = "Còn " + numOfBuyRemaining + " lượt";
     } catch(err) {
         document.getElementById("throwError4").innerHTML = err;
     }
@@ -270,7 +271,7 @@ async function submitTheAnswer() {
             } else {
                 document.getElementById("submitAnswer").innerHTML = "Mật mã không chính xác. Mời thử lại!";
                 numOfSubmitRemaining--;
-                document.getElementById("remainingsubmit").innerHTML = "Số lượt nhập còn lại: " + numOfSubmitRemaining;
+                document.getElementById("remainingsubmit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
 
                 if (numOfSubmitRemaining == 0) {
                     popupResult(false);    
@@ -322,8 +323,8 @@ function changeStatus() {
             resetSlide();
             
             document.getElementById("introContent").style.display = "block";
-            document.getElementById("remainingbuy").innerHTML = "Số lượt mua còn lại: " + numOfBuyRemaining; 
-            document.getElementById("remainingsubmit").innerHTML = "Số lượt nhập còn lại: " + numOfSubmitRemaining;
+            document.getElementById("remainingbuy").innerHTML = "Còn " + numOfBuyRemaining + " lượt"; 
+            document.getElementById("remainingsubmit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
             document.getElementById("startIntro").style.display = "block";
             
             document.getElementById("searchLog").innerHTML = "";
@@ -337,6 +338,11 @@ function changeStatus() {
             document.getElementById("changeCost").innerHTML = "Mua số";
             document.getElementById("buyNumberButton").style.display = "block";
             document.getElementById("buyNumberButton").style.marginLeft = "70px";
+            
+            document.getElementById("expression1").placeholder = "";
+            document.getElementById("expression2").placeholder = "";
+            document.getElementById("numToCheckProperties").placeholder = "";
+            document.getElementById("match-input").placeholder = "";
         } else {
             isPlaying = true;
             unlockScreen();
@@ -347,6 +353,11 @@ function changeStatus() {
             document.getElementById("startIntro").style.display = "none";
 
             document.getElementById("changeCost").innerHTML = "Mua số (Giá: " + buyNumberCost[0] + "s)";
+
+            document.getElementById("expression1").placeholder = "ví dụ: a + b";
+            document.getElementById("expression2").placeholder = "ví dụ: " + availableNumbers[0] + " * " + availableNumbers[1];
+            document.getElementById("numToCheckProperties").placeholder = "ví dụ: ab" + availableNumbers[0] + availableNumbers[1];
+            document.getElementById("match-input").placeholder = "ví dụ: " + availableNumbers[0] + availableNumbers[1] + availableNumbers[2] + availableNumbers[3];
         }
     } catch(err) {
         window.alert(err);

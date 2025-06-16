@@ -102,7 +102,7 @@ function checkExpression(latex1, latex2) {
         for (let j = 0; j < 4; j++) {
             if (latex1.charAt(i) == letterChars[j]) {
                 if (i != 0 && letterChars.includes(latex1.charAt(i - 1))) {
-                    throw "Mọi chữ số ở biểu thức 1 đều không được phép đứng cạnh nhau.";
+                    throw "Không được ghép bất kỳ hai chữ số nào ở biểu thức 1 để tạo thành số mới.";
                 }
 
                 if (markLetterChars[j]) {
@@ -128,7 +128,7 @@ function checkExpression(latex1, latex2) {
     for (let i = 0; i < latex2.length; i++) {
         if (numChars.includes(latex2.charAt(i))) {
             if (i != 0 && numChars.includes(latex2.charAt(i - 1))) {
-                throw "Mọi chữ số ở biểu thức 2 đều không được phép đứng cạnh nhau.";
+                throw "Không được ghép bất kỳ hai chữ số nào ở biểu thức 2 để tạo thành số mới.";
             }
 
             let markErr = true;
