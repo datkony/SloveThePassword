@@ -64,7 +64,8 @@ Lưu ý:
                 </div>
 
                 <div id="compareExpression" class="slide">
-                    <p>Nhập hai biểu thức cộng, trừ, nhân, trong đó một biểu thức sử dụng 2-3 chữ số trong mật mã (a,b,c,d)
+                    <button class="toolIntro" id="toolIntro1" onclick="changeIntro1Status()">Xem hướng dẫn</button>
+                    <p class="toolIntroContent" id="compareExpressionIntro">Nhập hai biểu thức cộng, trừ, nhân, trong đó một biểu thức sử dụng 2-3 chữ số trong mật mã (a,b,c,d)
                     và biểu thức còn lại gồm 2-3 chữ số trong tập số hiện tại
                     để nhận được kết quả so sánh giữa hai biểu thức (lớn hơn, nhỏ hơn, bằng)<br>
                     Lưu ý:<br>
@@ -86,19 +87,21 @@ Lưu ý:
                 </div>
                 
                 <div id="checkProperties" class="slide">
-                    <p>Tạo một số có từ 2 đến 4 chữ số gồm các chữ số ở trong mật mã (a, b, c, d) hoặc ở trong tập số hiện tại
+                    <button class="toolIntro" id="toolIntro2" onclick="changeIntro2Status()">Xem hướng dẫn</button>
+                    <p class="toolIntroContent" id="checkPropertiesIntro">Tạo một số có từ 2 đến 4 chữ số gồm các chữ số ở trong mật mã (a, b, c, d) hoặc ở trong tập số hiện tại
                     để nhận được tính chất của số đó (chính phương, nguyên tố, hoàn hảo, không thuộc cả 3 loại trên)<br>
                     Lưu ý: Số được tạo phải có ít nhất 2 chữ số từ mật mã<br><br></p>
-                    <label>Nhập số tạo được:</label>
+                    <label><br>Nhập số tạo được:</label>
                     <input type="text" id="numToCheckProperties">
                     <button class="actionButton" id="checkPropertiesButton" onclick="checkProperties()">Kiểm tra tính chất</button>
                     <div id="throwError2"></div>
                 </div>
                 
                 <div id="matchCode" class="slide">
-                    <p>Tạo một số có 4 chữ số gồm các chữ số ở trong tập số hiện tại
+                    <button class="toolIntro" id="toolIntro3" onclick="changeIntro3Status()">Xem hướng dẫn</button>
+                    <p class="toolIntroContent" id="matchCodeIntro">Tạo một số có 4 chữ số gồm các chữ số ở trong tập số hiện tại
                     để đối chiếu với mật mã và nhận được số chữ số đúng và ở đúng vị trí, số chữ số đúng nhưng ở sai vị trí<br><br></p>
-                    <label>Nhập số tạo được:</label>
+                    <label><br>Nhập số tạo được:</label>
                     <input type="text" id="match-input" maxlength="4">
                     <button class="actionButton" id="matchCodeButton" onclick="matchCode()">Đối chiếu</button>
                     <div id="throwError3"></div>

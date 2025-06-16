@@ -198,3 +198,19 @@ h1 {
 #closePopup:hover {
     opacity: 0.6;
 }
+
+.toolIntro {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: none;
+    background: none;
+}
+
+.toolIntro:hover {
+    opacity: 0.4;
+}
+
+.toolIntroContent {
+    margin-top: 0;
+    margin-bottom: 0;
+}

@@ -13,6 +13,10 @@ let searchedInformation = "";
 let numOfBuyRemaining = buyNumberCost.length;
 let numOfSubmitRemaining = maxNumOfSubmitAnswerTurn;
 
+let isCompareExpressionIntroDisplay = false;
+let isCheckPropertiesIntroDisplay = false;
+let isMatchCodeIntroDisplay = false;
+
 // Tạo mật mã 
 firstGenerateNewSecretCode();
 
@@ -32,6 +36,10 @@ document.getElementById("timer").innerHTML = "Thời gian còn lại: " + numOfS
 document.getElementById("tab1").innerHTML = "So sánh<br/>(Giá: " + compareExpressionCost + "s)";
 document.getElementById("tab2").innerHTML = "Ghép số<br/>(Giá: " + checkPropertiesCost + "s)";
 document.getElementById("tab3").innerHTML = "Đối chiếu<br/>(Giá: " + matchCodeCost + "s)";
+
+document.getElementById("compareExpressionIntro").style.display = "none";
+document.getElementById("checkPropertiesIntro").style.display = "none";
+document.getElementById("matchCodeIntro").style.display = "none";
 
 //Trạng thái chưa sẵn sàng
 lockScreen();
@@ -513,4 +521,40 @@ function firstGenerateNewSecretCode() {
         window.alert(err);
         firstGenerateNewSecretCode();
     }
+}
+
+function changeIntro1Status() {
+    if (isCompareExpressionIntroDisplay) {
+        document.getElementById("compareExpressionIntro").style.display = "none";
+        document.getElementById("toolIntro1").innerHTML = "Xem hướng dẫn";
+    } else {
+        document.getElementById("compareExpressionIntro").style.display = "block";
+        document.getElementById("toolIntro1").innerHTML = "Ẩn hướng dẫn";
+    }
+
+    isCompareExpressionIntroDisplay = !isCompareExpressionIntroDisplay;
+}
+
+function changeIntro2Status() {
+    if (isCompareExpressionIntroDisplay) {
+        document.getElementById("checkPropertiesIntro").style.display = "none";
+        document.getElementById("toolIntro2").innerHTML = "Xem hướng dẫn";
+    } else {
+        document.getElementById("checkPropertiesIntro").style.display = "block";
+        document.getElementById("toolIntro2").innerHTML = "Ẩn hướng dẫn";
+    }
+
+    isCompareExpressionIntroDisplay = !isCompareExpressionIntroDisplay;
+}
+
+function changeIntro3Status() {
+    if (isCompareExpressionIntroDisplay) {
+        document.getElementById("matchCodeIntro").style.display = "none";
+        document.getElementById("toolIntro3").innerHTML = "Xem hướng dẫn";
+    } else {
+        document.getElementById("matchCodeIntro").style.display = "block";
+        document.getElementById("toolIntro3").innerHTML = "Ẩn hướng dẫn";
+    }
+
+    isCompareExpressionIntroDisplay = !isCompareExpressionIntroDisplay;
 }
