@@ -350,6 +350,12 @@ function changeStatus() {
             document.getElementById("expression2").placeholder = "";
             document.getElementById("numToCheckProperties").placeholder = "";
             document.getElementById("match-input").placeholder = "";
+
+            document.getElementById("answer").value = "";
+            document.getElementById("expression1").value = "";
+            document.getElementById("expression2").value = "";
+            document.getElementById("numToCheckProperties").value = "";
+            document.getElementById("match-input").value = "";
         } else {
             isPlaying = true;
             unlockScreen();
