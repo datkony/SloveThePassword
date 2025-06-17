@@ -102,7 +102,7 @@ function checkExpression(latex1, latex2) {
         for (let j = 0; j < 4; j++) {
             if (latex1.charAt(i) == letterChars[j]) {
                 if (i != 0 && letterChars.includes(latex1.charAt(i - 1))) {
-                    throw "Không được ghép bất kỳ hai chữ số nào ở biểu thức 1 để tạo thành số mới.";
+                    throw "Không được ghép bất kỳ hai chữ số trở nên nào ở biểu thức 1 để tạo thành số mới.";
                 }
 
                 if (markLetterChars[j]) {
@@ -128,7 +128,7 @@ function checkExpression(latex1, latex2) {
     for (let i = 0; i < latex2.length; i++) {
         if (numChars.includes(latex2.charAt(i))) {
             if (i != 0 && numChars.includes(latex2.charAt(i - 1))) {
-                throw "Không được ghép bất kỳ hai chữ số nào ở biểu thức 2 để tạo thành số mới.";
+                throw "Không được ghép bất kỳ hai chữ số trở nên nào ở biểu thức 2 để tạo thành số mới.";
             }
 
             let markErr = true;
@@ -143,10 +143,10 @@ function checkExpression(latex1, latex2) {
             }
 
             if (markErr) {
-                throw "Chỉ được sủ dụng các chữ số từ tập số hiện tại và mỗi vị trí trong tập chỉ được sử dụng một lần ở biểu thức 2.";
+                throw "Chỉ được sủ dụng các chữ số từ tập số được dùng và mỗi vị trí trong tập chỉ được sử dụng một lần ở biểu thức 2.";
             }
         } else if (!mathChars.includes(latex2.charAt(i))) {
-            throw "Chỉ được sử dụng các dấu +, -, *, () và các chữ số ở tập số hiện tại để nhập biểu thức 2.";
+            throw "Chỉ được sử dụng các dấu +, -, *, () và các chữ số ở tập số được dùng để nhập biểu thức 2.";
         }
     }
 
@@ -228,7 +228,7 @@ function checkNumberForProperties(input) {
             }
 
             if (mark) {
-                throw "Chỉ được sủ dụng các chữ số từ mật mã hoặc tập số hiện tại và mỗi vị trí chỉ được sử dụng một lần.";
+                throw "Chỉ được sủ dụng các chữ số từ mật mã hoặc tập số được dùng và mỗi vị trí chỉ được sử dụng một lần.";
             }
         }
     }
@@ -271,7 +271,7 @@ app.post('/matchCode', (req, res) => {
             }
         }
 
-        let output = inputCode + ": " + numberAtRightPosition + " chữ số ở đúng vị trí, " 
+        let output = inputCode + ": " + numberAtRightPosition + " chữ số đúng và ở đúng vị trí, " 
                     + rightNumberButWrongPosition + " chữ số đúng nhưng ở sai vị trí";
         res.json({ message: output });  //Bỏ dấu chấm ở cuối câu để phân biện với error
     } catch(err) {
@@ -306,7 +306,7 @@ function checkNumberForMatchCode(input) {
         }
 
         if (mark) {
-            throw "Chỉ được sử dụng các chữ số từ tập số hiện tại và mỗi vị trí chỉ được sử dụng một lần.";
+            throw "Chỉ được sử dụng các chữ số từ tập số được dùng và mỗi vị trí chỉ được sử dụng một lần.";
         }
     }
 }
@@ -340,6 +340,6 @@ function exchangeLetterToNumber(latex) {
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`🚀 Server running at http://slove-the-password-backend.onrender.com`);
 });
 

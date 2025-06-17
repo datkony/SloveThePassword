@@ -21,24 +21,24 @@ let isMatchCodeIntroDisplay = false;
 firstGenerateNewSecretCode();
 
 freeNumber();
-document.getElementById("startIntro").innerHTML = "Khởi điểm: " + numOfFreeNumbers + " chữ số";
+document.getElementById("start-intro").innerHTML = "Khởi điểm: " + numOfFreeNumbers + " chữ số";
 
-document.getElementById("compareExpression").style.display = "none";
-document.getElementById("checkProperties").style.display = "none";
-document.getElementById("matchCode").style.display = "none";
-document.getElementById("introContent").style.display = "block";
+document.getElementById("compare-expression").style.display = "none";
+document.getElementById("check-properties").style.display = "none";
+document.getElementById("match-code").style.display = "none";
+document.getElementById("intro-content").style.display = "block";
 
-document.getElementById("remainingbuy").innerHTML = "Còn " + numOfBuyRemaining + " lượt"; 
-document.getElementById("remainingsubmit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
+document.getElementById("remaining-buy").innerHTML = "Còn " + numOfBuyRemaining + " lượt"; 
+document.getElementById("remaining-submit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
 document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
 
 document.getElementById("tab1").innerHTML = "So sánh<br/>🏷️" + compareExpressionCost + "s";
 document.getElementById("tab2").innerHTML = "Ghép số<br/>🏷️" + checkPropertiesCost + "s";
 document.getElementById("tab3").innerHTML = "Đối chiếu<br/>🏷️" + matchCodeCost + "s";
 
-document.getElementById("compareExpressionIntro").style.display = "none";
-document.getElementById("checkPropertiesIntro").style.display = "none";
-document.getElementById("matchCodeIntro").style.display = "none";
+document.getElementById("compare-expression-intro").style.display = "none";
+document.getElementById("check-properties-intro").style.display = "none";
+document.getElementById("match-code-intro").style.display = "none";
 
 //Trạng thái chưa sẵn sàng
 lockScreen();
@@ -107,19 +107,19 @@ function buyRandomNumber() {
         pricePay(buyNumberCost[buyNumberCost.length - numOfBuyRemaining]);
 
         if (numOfBuyRemaining == 1){
-            document.getElementById("buyNumberButton").innerHTML = "🛒";
-            document.getElementById("buyNumberButton").style.display = "none";
+            document.getElementById("buy-number-button").innerHTML = "🛒";
+            document.getElementById("buy-number-button").style.display = "none";
         } else { 
             let buyNumberCostNext = buyNumberCost[buyNumberCost.length + 1 - numOfBuyRemaining];
-            document.getElementById("buyNumberButton").innerHTML = "🛒 (🏷️" + buyNumberCostNext + "s)";
+            document.getElementById("buy-number-button").innerHTML = "🛒 (🏷️" + buyNumberCostNext + "s)";
         }
 
         numOfBuyRemaining--;
         addAvailableNumbers();
         document.getElementById("player-numbers").innerText = availableNumbers.join(" ");
-        document.getElementById("remainingbuy").innerHTML = "Còn " + numOfBuyRemaining + " lượt";
+        document.getElementById("remaining-buy").innerHTML = "Còn " + numOfBuyRemaining + " lượt";
     } catch(err) {
-        document.getElementById("throwError4").innerHTML = err;
+        document.getElementById("throw-error4").innerHTML = err;
     }
 }
         
@@ -154,9 +154,9 @@ async function compareExpression() {
             throw message;
         }
 
-        document.getElementById("throwError1").innerHTML = "";
+        document.getElementById("throw-error1").innerHTML = "";
     } catch(err) {    
-        document.getElementById("throwError1").innerHTML = "Không hợp lệ! " + err;
+        document.getElementById("throw-error1").innerHTML = "Không hợp lệ! " + err;
     }
 }
 
@@ -182,7 +182,7 @@ function standarlizationExpression(input) {
 
 async function checkProperties() {
     try {
-        let input = document.getElementById("numToCheckProperties").value;
+        let input = document.getElementById("num-to-check-properties").value;
 
         const response = await fetch('https://slove-the-password-backend.onrender.com/checkProperties', {
             method: 'POST',
@@ -211,9 +211,9 @@ async function checkProperties() {
             throw message;
         }
         
-        document.getElementById("throwError2").innerHTML = "";
+        document.getElementById("throw-error2").innerHTML = "";
     } catch(err) {
-        document.getElementById("throwError2").innerHTML = "Không hợp lệ! " + err;
+        document.getElementById("throw-error2").innerHTML = "Không hợp lệ! " + err;
     }
 }
 
@@ -243,16 +243,16 @@ async function matchCode() {
             throw message;
         }
 
-        document.getElementById("throwError3").innerHTML = "";
+        document.getElementById("throw-error3").innerHTML = "";
     } catch(err) {
-        document.getElementById("throwError3").innerHTML = "Không hợp lệ! " + err;
+        document.getElementById("throw-error3").innerHTML = "Không hợp lệ! " + err;
     }
 }
 
 //Bổ sung kết quả thu được vào trong bảng tổng hợp
 function addSearchResult(result) {
     searchedInformation += result + "<br/>" + "<br/>";
-    document.getElementById("searchLog").innerHTML = searchedInformation;
+    document.getElementById("search-log").innerHTML = searchedInformation;
 }
 
 // Submit đáp án
@@ -260,7 +260,7 @@ async function submitTheAnswer() {
     let answer = parseInt(document.getElementById("answer").value);
 
     if (!(answer >= 0 && answer <= 9999)) {
-        document.getElementById("submitAnswer").innerHTML = "Không hợp lệ. Mật mã phải nằm trong đoạn từ 0 đến 9999!";
+        document.getElementById("submit-answer").innerHTML = "Không hợp lệ. Mật mã phải nằm trong đoạn từ 0 đến 9999!";
     } else {
         try {
             const response = await fetch('https://slove-the-password-backend.onrender.com/check', {
@@ -276,16 +276,16 @@ async function submitTheAnswer() {
             if (data.result === 'correct') {
                 popupResult(true);
             } else {
-                document.getElementById("submitAnswer").innerHTML = "Mật mã không chính xác. Mời thử lại!";
+                document.getElementById("submit-answer").innerHTML = "Mật mã không chính xác. Mời thử lại!";
                 numOfSubmitRemaining--;
-                document.getElementById("remainingsubmit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
+                document.getElementById("remaining-submit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
 
                 if (numOfSubmitRemaining == 0) {
                     popupResult(false);    
                 }
             }
         } catch(err) {
-            document.getElementById("submitAnswer").innerHTML = "Lỗi kết nối đến máy chủ.";
+            document.getElementById("submit-answer").innerHTML = "Lỗi kết nối đến máy chủ.";
         }
     }
 
@@ -297,17 +297,17 @@ function showSlide(slide) {
     resetSlide();
 
     if (slide == 1) {
-        document.getElementById("compareExpression").style.display = "block";
+        document.getElementById("compare-expression").style.display = "block";
         document.getElementById("tab1").style.pointerEvents = "none";
         document.getElementById('tab1').style.backgroundColor = "#ffeb3b";
         document.getElementById('tab1').style.color = "#000000";
     } else if (slide == 2) {
-        document.getElementById("checkProperties").style.display = "block";
+        document.getElementById("check-properties").style.display = "block";
         document.getElementById("tab2").style.pointerEvents = "none";
         document.getElementById('tab2').style.backgroundColor = "#ffeb3b";
         document.getElementById('tab2').style.color = "#000000";
     } else {
-        document.getElementById("matchCode").style.display = "block";
+        document.getElementById("match-code").style.display = "block";
         document.getElementById("tab3").style.pointerEvents = "none";
         document.getElementById('tab3').style.backgroundColor = "#ffeb3b";
         document.getElementById('tab3').style.color = "#000000";
@@ -329,12 +329,12 @@ function changeStatus() {
             document.getElementById("player-numbers").innerText = "";
             resetSlide();
             
-            document.getElementById("introContent").style.display = "block";
-            document.getElementById("remainingbuy").innerHTML = "Còn " + numOfBuyRemaining + " lượt"; 
-            document.getElementById("remainingsubmit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
-            document.getElementById("startIntro").style.display = "block";
+            document.getElementById("intro-content").style.display = "block";
+            document.getElementById("remaining-buy").innerHTML = "Còn " + numOfBuyRemaining + " lượt"; 
+            document.getElementById("remaining-submit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
+            document.getElementById("start-intro").style.display = "block";
             
-            document.getElementById("searchLog").innerHTML = "";
+            document.getElementById("search-log").innerHTML = "";
 
             lockScreen();
             document.getElementById("status").innerHTML = "&#9205";
@@ -342,19 +342,19 @@ function changeStatus() {
 
             document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
 
-            document.getElementById("buyNumberButton").innerHTML = "🛒";
-            document.getElementById("buyNumberButton").style.display = "block";
-            document.getElementById("buyNumberButton").style.marginLeft = "22.5%";
+            document.getElementById("buy-number-button").innerHTML = "🛒";
+            document.getElementById("buy-number-button").style.display = "block";
+            document.getElementById("buy-number-button").style.marginLeft = "22.5%";
             
             document.getElementById("expression1").placeholder = "";
             document.getElementById("expression2").placeholder = "";
-            document.getElementById("numToCheckProperties").placeholder = "";
+            document.getElementById("num-to-check-properties").placeholder = "";
             document.getElementById("match-input").placeholder = "";
 
             document.getElementById("answer").value = "";
             document.getElementById("expression1").value = "";
             document.getElementById("expression2").value = "";
-            document.getElementById("numToCheckProperties").value = "";
+            document.getElementById("num-to-check-properties").value = "";
             document.getElementById("match-input").value = "";
         } else {
             isPlaying = true;
@@ -363,13 +363,13 @@ function changeStatus() {
             document.getElementById("status").innerHTML = "&#8634";
             document.getElementById("status").style.backgroundColor = "#6c0703";
             document.getElementById("player-numbers").innerText = availableNumbers.join(" ");
-            document.getElementById("startIntro").style.display = "none";
+            document.getElementById("start-intro").style.display = "none";
 
-            document.getElementById("buyNumberButton").innerHTML = "🛒 (🏷️" + buyNumberCost[0] + "s)";
+            document.getElementById("buy-number-button").innerHTML = "🛒 (🏷️" + buyNumberCost[0] + "s)";
 
             document.getElementById("expression1").placeholder = "ví dụ: a + b";
             document.getElementById("expression2").placeholder = "ví dụ: " + availableNumbers[0] + " * " + availableNumbers[1];
-            document.getElementById("numToCheckProperties").placeholder = "ví dụ: ab" + availableNumbers[0] + availableNumbers[1];
+            document.getElementById("num-to-check-properties").placeholder = "ví dụ: ab" + availableNumbers[0] + availableNumbers[1];
             document.getElementById("match-input").placeholder = "ví dụ: " + availableNumbers[0] + availableNumbers[1] + availableNumbers[2] + availableNumbers[3];
         }
     } catch(err) {
@@ -394,24 +394,24 @@ async function popupResult(isWon) {
         document.getElementById("result-title").innerHTML = "Giải mã thành công";
         document.getElementById("result-title").style.color = "lime";
         document.getElementById("result-content").innerHTML = "Xin chúc mừng! Bạn đã tìm ra đúng mật mã được ẩn giấu.";
-        document.getElementById("closePopup").innerHTML = "Tuyệt!";
-        document.getElementById("closePopup").style.backgroundColor = "#015901";
+        document.getElementById("close-popup").innerHTML = "Tuyệt!";
+        document.getElementById("close-popup").style.backgroundColor = "#015901";
     } else {
         document.getElementById("result-title").innerHTML = "Giải mã thất bại";
         document.getElementById("result-title").style.color = "red";
         document.getElementById("result-content").innerHTML = "Rất tiếc, bạn đã không tìm được đáp án chính xác. Chúc bạn may mắn lần sau!";
-        document.getElementById("closePopup").innerHTML = "Lại!";
-        document.getElementById("closePopup").style.backgroundColor = "#6c0703";
+        document.getElementById("close-popup").innerHTML = "Lại!";
+        document.getElementById("close-popup").style.backgroundColor = "#6c0703";
     }
 
     if (correctAnswer != -1) {
-        document.getElementById("correctAnswer").innerHTML = "Mật mã được ẩn giấu là " + correctAnswer + ".";
+        document.getElementById("correct-answer").innerHTML = "Mật mã được ẩn giấu là " + correctAnswer + ".";
         document.getElementById("result-popup").style.display = "block";
     } else {
-        document.getElementById("correctAnswer").innerHTML = "Xin lỗi hệ thống không thể trích xuất đáp án từ máy chủ server!";
+        document.getElementById("correct-answer").innerHTML = "Xin lỗi hệ thống không thể trích xuất đáp án từ máy chủ server!";
     }
 
-    document.getElementById("allScreen").style.display = "block";
+    document.getElementById("all-screen").style.display = "block";
     lockScreen();
 }
 
@@ -419,58 +419,58 @@ function lockScreen() {
     document.getElementById("answer").disabled = true;
     document.getElementById("expression1").disabled = true;
     document.getElementById("expression2").disabled = true;
-    document.getElementById("numToCheckProperties").disabled = true;
+    document.getElementById("num-to-check-properties").disabled = true;
     document.getElementById("match-input").disabled = true;
 
-    document.getElementById("buyNumberButton").disabled = true;
-    document.getElementById("submitButton").disabled = true;
+    document.getElementById("buy-number-button").disabled = true;
+    document.getElementById("submit-button").disabled = true;
     document.getElementById("compare").disabled = true;
-    document.getElementById("checkPropertiesButton").disabled = true;
-    document.getElementById("matchCodeButton").disabled = true;
+    document.getElementById("check-properties-button").disabled = true;
+    document.getElementById("match-code-button").disabled = true;
 
-    document.getElementById("buyNumberButton").style.pointerEvents = "none";
-    document.getElementById("submitButton").style.pointerEvents = "none";
+    document.getElementById("buy-number-button").style.pointerEvents = "none";
+    document.getElementById("submit-button").style.pointerEvents = "none";
     document.getElementById("compare").style.pointerEvents = "none";
-    document.getElementById("checkPropertiesButton").style.pointerEvents = "none";
-    document.getElementById("matchCodeButton").style.pointerEvents = "none";
+    document.getElementById("check-properties-button").style.pointerEvents = "none";
+    document.getElementById("match-code-button").style.pointerEvents = "none";
 
-    document.getElementById("throwError1").innerHTML = "";
-    document.getElementById("throwError2").innerHTML = "";
-    document.getElementById("throwError3").innerHTML = "";
-    document.getElementById("throwError4").innerHTML = "";
-    document.getElementById("submitAnswer").innerHTML = "";
+    document.getElementById("throw-error1").innerHTML = "";
+    document.getElementById("throw-error2").innerHTML = "";
+    document.getElementById("throw-error3").innerHTML = "";
+    document.getElementById("throw-error4").innerHTML = "";
+    document.getElementById("submit-answer").innerHTML = "";
 }
 
 function unlockScreen() {
     document.getElementById("answer").disabled = false;
     document.getElementById("expression1").disabled = false;
     document.getElementById("expression2").disabled = false;
-    document.getElementById("numToCheckProperties").disabled = false;
+    document.getElementById("num-to-check-properties").disabled = false;
     document.getElementById("match-input").disabled = false;
 
-    document.getElementById("buyNumberButton").disabled = false;
-    document.getElementById("submitButton").disabled = false;
+    document.getElementById("buy-number-button").disabled = false;
+    document.getElementById("submit-button").disabled = false;
     document.getElementById("compare").disabled = false;
-    document.getElementById("checkPropertiesButton").disabled = false;
-    document.getElementById("matchCodeButton").disabled = false;
+    document.getElementById("check-properties-button").disabled = false;
+    document.getElementById("match-code-button").disabled = false;
 
-    document.getElementById("buyNumberButton").style.pointerEvents = "auto";
-    document.getElementById("submitButton").style.pointerEvents = "auto";
+    document.getElementById("buy-number-button").style.pointerEvents = "auto";
+    document.getElementById("submit-button").style.pointerEvents = "auto";
     document.getElementById("compare").style.pointerEvents = "auto";
-    document.getElementById("checkPropertiesButton").style.pointerEvents = "auto";
-    document.getElementById("matchCodeButton").style.pointerEvents = "auto";
+    document.getElementById("check-properties-button").style.pointerEvents = "auto";
+    document.getElementById("match-code-button").style.pointerEvents = "auto";
 }
 
 function closePopup() {
-    document.getElementById("allScreen").style.display = "none";
+    document.getElementById("all-screen").style.display = "none";
     document.getElementById("result-popup").style.display = "none";
 }
 
 function resetSlide() {
-    document.getElementById("introContent").style.display = "none";
-    document.getElementById("compareExpression").style.display = "none";
-    document.getElementById("checkProperties").style.display = "none";
-    document.getElementById("matchCode").style.display = "none";
+    document.getElementById("intro-content").style.display = "none";
+    document.getElementById("compare-expression").style.display = "none";
+    document.getElementById("check-properties").style.display = "none";
+    document.getElementById("match-code").style.display = "none";
 
     document.getElementById("tab1").style.pointerEvents = "auto";
     document.getElementById("tab2").style.pointerEvents = "auto";
@@ -530,11 +530,11 @@ function firstGenerateNewSecretCode() {
 
 function changeIntro1Status() {
     if (isCompareExpressionIntroDisplay) {
-        document.getElementById("compareExpressionIntro").style.display = "none";
-        document.getElementById("toolIntro1").innerHTML = "?";
+        document.getElementById("compare-expression-intro").style.display = "none";
+        document.getElementById("tool-intro1").innerHTML = "?";
     } else {
-        document.getElementById("compareExpressionIntro").style.display = "block";
-        document.getElementById("toolIntro1").innerHTML = "&#10006";
+        document.getElementById("compare-expression-intro").style.display = "block";
+        document.getElementById("tool-intro1").innerHTML = "&#10006";
     }
 
     isCompareExpressionIntroDisplay = !isCompareExpressionIntroDisplay;
@@ -542,11 +542,11 @@ function changeIntro1Status() {
 
 function changeIntro2Status() {
     if (isCompareExpressionIntroDisplay) {
-        document.getElementById("checkPropertiesIntro").style.display = "none";
-        document.getElementById("toolIntro2").innerHTML = "?";
+        document.getElementById("check-properties-intro").style.display = "none";
+        document.getElementById("tool-intro2").innerHTML = "?";
     } else {
-        document.getElementById("checkPropertiesIntro").style.display = "block";
-        document.getElementById("toolIntro2").innerHTML = "&#10006";
+        document.getElementById("check-properties-intro").style.display = "block";
+        document.getElementById("tool-intro2").innerHTML = "&#10006";
     }
 
     isCompareExpressionIntroDisplay = !isCompareExpressionIntroDisplay;
@@ -554,22 +554,33 @@ function changeIntro2Status() {
 
 function changeIntro3Status() {
     if (isCompareExpressionIntroDisplay) {
-        document.getElementById("matchCodeIntro").style.display = "none";
-        document.getElementById("toolIntro3").innerHTML = "?";
+        document.getElementById("match-code-intro").style.display = "none";
+        document.getElementById("tool-intro3").innerHTML = "?";
     } else {
-        document.getElementById("matchCodeIntro").style.display = "block";
-        document.getElementById("toolIntro3").innerHTML = "&#10006";
+        document.getElementById("match-code-intro").style.display = "block";
+        document.getElementById("tool-intro3").innerHTML = "&#10006";
     }
 
     isCompareExpressionIntroDisplay = !isCompareExpressionIntroDisplay;
 }
 
 function openIntroPopup() {
-    document.getElementById("allScreen").style.display = "block";
+    document.getElementById("all-screen").style.display = "block";
     document.getElementById("intro-popup").style.display = "block";
+    document.getElementById("intro-popup-content").scrollTop = 0;
 }
 
 function closeIntroPopup() {
-    document.getElementById("allScreen").style.display = "none";
+    document.getElementById("all-screen").style.display = "none";
     document.getElementById("intro-popup").style.display = "none";
+}
+
+function openTimerIntroPopup() {
+    document.getElementById("all-screen").style.display = "block";
+    document.getElementById("timer-intro-popup").style.display = "block";
+}
+
+function closeTimerIntroPopup() {
+    document.getElementById("all-screen").style.display = "none";
+    document.getElementById("timer-intro-popup").style.display = "none";
 }
