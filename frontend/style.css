@@ -3,22 +3,26 @@ h1 {
     margin-top: 0px;
 }
 
-#introduction1 {
-    text-align: center;
-    margin-top: 0px;
-    margin-bottom: 10px;
-    font-size: 125%;
+#SubTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     overflow: visible;
+    gap: 0.5%
 }
 
-#introduction2 {
-    text-align: left;
-    margin-top: 0px;
-    margin-bottom: 10px;
-    margin-left: 22%;
-    margin-right: 22%;
+#introduction0 {
     font-size: 125%;
-    overflow: visible;
+}
+
+#openIntroPopup {
+    background: none;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+#openIntroPopup:hover {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 #status {
@@ -28,7 +32,7 @@ h1 {
     color: #ffffff;
     padding: 5px;
     border-radius: 5px;
-    width: 70px;
+    width: 30px;
     text-align: center;
 }
 
@@ -43,7 +47,7 @@ h1 {
     border-radius: 5px;
     float: right;
     text-align: center;
-    width: 200px;
+    width: 80px;
 }
 
 #status:hover {
@@ -191,6 +195,36 @@ h1 {
     transition: opacity 2s linear;
 }
 
+#intro-popup {
+    display: none;
+    position: absolute;
+    text-align: center;
+    margin-top: 5.5%;
+    margin-left: 10%;
+    width: 70%;
+    height: 52%;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: #ffffff;
+    padding: 5%;
+    overflow: auto;
+}
+
+#introduction1 {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    font-size: 125%;
+    overflow: visible;
+}
+
+#introduction2 {
+    text-align: left;
+    margin: 0px;
+    font-size: 125%;
+    overflow: visible;
+}
+
 
 #result-popup {
     display: none;
@@ -207,11 +241,25 @@ h1 {
     overflow: auto;
 }
 
+#closeIntroPopup {
+    border: none;
+    color: #ffffff;
+    padding: 3px;
+    width: 30px;
+    background-color: #6c0703;
+    border-radius: 5px;
+}
+
+#closeIntroPopup:hover {
+    opacity: 0.6;
+}
+
 #closePopup {
     border: none;
     color: #ffffff;
     padding: 3px;
     width: 90px;
+    border-radius: 5px;
 }
 
 #closePopup:hover {
@@ -221,12 +269,13 @@ h1 {
 .toolIntro {
     margin-top: 20px;
     margin-bottom: 20px;
-    border: none;
+    border: 1px solid black;
     background: none;
+    border-radius: 5px;
 }
 
 .toolIntro:hover {
-    opacity: 0.4;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .toolIntroContent {

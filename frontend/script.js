@@ -21,8 +21,7 @@ let isMatchCodeIntroDisplay = false;
 firstGenerateNewSecretCode();
 
 freeNumber();
-document.getElementById("startIntro").innerHTML = "Các chữ số trong tập sẽ xuất hiện ở đây<br/>Khi bắt đầu, bạn sẽ được phát miễn phí " 
-                                                + numOfFreeNumbers + " chữ số làm khởi điểm";
+document.getElementById("startIntro").innerHTML = "Khởi điểm: " + numOfFreeNumbers + " chữ số";
 
 document.getElementById("compareExpression").style.display = "none";
 document.getElementById("checkProperties").style.display = "none";
@@ -31,11 +30,11 @@ document.getElementById("introContent").style.display = "block";
 
 document.getElementById("remainingbuy").innerHTML = "Còn " + numOfBuyRemaining + " lượt"; 
 document.getElementById("remainingsubmit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
-document.getElementById("timer").innerHTML = "Thời gian còn lại: " + numOfSecondLeft + "s";
+document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
 
-document.getElementById("tab1").innerHTML = "So sánh<br/>(Giá: " + compareExpressionCost + "s)";
-document.getElementById("tab2").innerHTML = "Ghép số<br/>(Giá: " + checkPropertiesCost + "s)";
-document.getElementById("tab3").innerHTML = "Đối chiếu<br/>(Giá: " + matchCodeCost + "s)";
+document.getElementById("tab1").innerHTML = "So sánh<br/>🏷️" + compareExpressionCost + "s";
+document.getElementById("tab2").innerHTML = "Ghép số<br/>🏷️" + checkPropertiesCost + "s";
+document.getElementById("tab3").innerHTML = "Đối chiếu<br/>🏷️" + matchCodeCost + "s";
 
 document.getElementById("compareExpressionIntro").style.display = "none";
 document.getElementById("checkPropertiesIntro").style.display = "none";
@@ -108,11 +107,11 @@ function buyRandomNumber() {
         pricePay(buyNumberCost[buyNumberCost.length - numOfBuyRemaining]);
 
         if (numOfBuyRemaining == 1){
-            document.getElementById("buyNumberButton").innerHTML = "Mua";
+            document.getElementById("buyNumberButton").innerHTML = "🛒";
             document.getElementById("buyNumberButton").style.display = "none";
         } else { 
             let buyNumberCostNext = buyNumberCost[buyNumberCost.length + 1 - numOfBuyRemaining];
-            document.getElementById("buyNumberButton").innerHTML = "Mua (Giá: " + buyNumberCostNext + "s)";
+            document.getElementById("buyNumberButton").innerHTML = "🛒 (🏷️" + buyNumberCostNext + "s)";
         }
 
         numOfBuyRemaining--;
@@ -338,12 +337,12 @@ function changeStatus() {
             document.getElementById("searchLog").innerHTML = "";
 
             lockScreen();
-            document.getElementById("status").innerHTML = "Start";
+            document.getElementById("status").innerHTML = "&#9205";
             document.getElementById("status").style.backgroundColor = "#015901";
 
-            document.getElementById("timer").innerHTML = "Thời gian còn lại: " + numOfSecondLeft + "s";
+            document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
 
-            document.getElementById("buyNumberButton").innerHTML = "Mua";
+            document.getElementById("buyNumberButton").innerHTML = "🛒";
             document.getElementById("buyNumberButton").style.display = "block";
             document.getElementById("buyNumberButton").style.marginLeft = "22.5%";
             
@@ -355,12 +354,12 @@ function changeStatus() {
             isPlaying = true;
             unlockScreen();
 
-            document.getElementById("status").innerHTML = "Restart";
+            document.getElementById("status").innerHTML = "&#8634";
             document.getElementById("status").style.backgroundColor = "#6c0703";
             document.getElementById("player-numbers").innerText = availableNumbers.join(" ");
             document.getElementById("startIntro").style.display = "none";
 
-            document.getElementById("buyNumberButton").innerHTML = "Mua (Giá: " + buyNumberCost[0] + "s)";
+            document.getElementById("buyNumberButton").innerHTML = "🛒 (🏷️" + buyNumberCost[0] + "s)";
 
             document.getElementById("expression1").placeholder = "ví dụ: a + b";
             document.getElementById("expression2").placeholder = "ví dụ: " + availableNumbers[0] + " * " + availableNumbers[1];
@@ -485,7 +484,7 @@ function resetSlide() {
 setInterval(function countDown() {
     if(isPlaying) {
         numOfSecondLeft--;
-        document.getElementById("timer").innerHTML = "Thời gian còn lại: " + numOfSecondLeft + "s";
+        document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
     }
 
     if(numOfSecondLeft <= 0) {
@@ -499,7 +498,7 @@ function pricePay(cost) {
     }
 
     numOfSecondLeft -= cost;
-    document.getElementById("timer").innerHTML = "Thời gian còn lại: " + numOfSecondLeft + "s";
+    document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
 }
 
 async function generateNewSecretCode() {
@@ -526,10 +525,10 @@ function firstGenerateNewSecretCode() {
 function changeIntro1Status() {
     if (isCompareExpressionIntroDisplay) {
         document.getElementById("compareExpressionIntro").style.display = "none";
-        document.getElementById("toolIntro1").innerHTML = "Xem hướng dẫn";
+        document.getElementById("toolIntro1").innerHTML = "?";
     } else {
         document.getElementById("compareExpressionIntro").style.display = "block";
-        document.getElementById("toolIntro1").innerHTML = "Ẩn hướng dẫn";
+        document.getElementById("toolIntro1").innerHTML = "&#10006";
     }
 
     isCompareExpressionIntroDisplay = !isCompareExpressionIntroDisplay;
@@ -538,10 +537,10 @@ function changeIntro1Status() {
 function changeIntro2Status() {
     if (isCompareExpressionIntroDisplay) {
         document.getElementById("checkPropertiesIntro").style.display = "none";
-        document.getElementById("toolIntro2").innerHTML = "Xem hướng dẫn";
+        document.getElementById("toolIntro2").innerHTML = "?";
     } else {
         document.getElementById("checkPropertiesIntro").style.display = "block";
-        document.getElementById("toolIntro2").innerHTML = "Ẩn hướng dẫn";
+        document.getElementById("toolIntro2").innerHTML = "&#10006";
     }
 
     isCompareExpressionIntroDisplay = !isCompareExpressionIntroDisplay;
@@ -550,11 +549,21 @@ function changeIntro2Status() {
 function changeIntro3Status() {
     if (isCompareExpressionIntroDisplay) {
         document.getElementById("matchCodeIntro").style.display = "none";
-        document.getElementById("toolIntro3").innerHTML = "Xem hướng dẫn";
+        document.getElementById("toolIntro3").innerHTML = "?";
     } else {
         document.getElementById("matchCodeIntro").style.display = "block";
-        document.getElementById("toolIntro3").innerHTML = "Ẩn hướng dẫn";
+        document.getElementById("toolIntro3").innerHTML = "&#10006";
     }
 
     isCompareExpressionIntroDisplay = !isCompareExpressionIntroDisplay;
+}
+
+function openIntroPopup() {
+    document.getElementById("allScreen").style.display = "block";
+    document.getElementById("intro-popup").style.display = "block";
+}
+
+function closeIntroPopup() {
+    document.getElementById("allScreen").style.display = "none";
+    document.getElementById("intro-popup").style.display = "none";
 }

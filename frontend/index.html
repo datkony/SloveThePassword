@@ -8,44 +8,36 @@
 </head>
 <body>
     <h1>Truy tìm mật mã</h1>
-    <p id="introduction1">
-Mật mã là một số trong đoạn từ 0 đến 9999 đã bị ẩn dưới dạng <b>abcd</b> với a, b, c, d là các chữ số trong đoạn từ 0 đến 9<br>
-Hãy sử dụng <b>các chữ số trên cùng với các chữ số từ tập số hiện tại</b> cho ba công cụ <b>SO SÁNH, GHÉP SỐ, ĐỐI CHIẾU</b><br>
-để tìm ra các manh mối từ đó giải được mật mã trong thời gian và số lượt nhập quy định!
-    </p>
-    <p id="introduction2">
-Lưu ý:<br>
-    - Mỗi lượt sử dụng công cụ sẽ bị <b>trừ đi một lượng thời gian bằng giá của công cụ đó</b><br>
-    - Mỗi lần sử dụng công cụ <b>chỉ được phép dùng các chữ số có sẵn trong mật mã và tập số hiện tại</b>,
-    với <b>số lần sử dụng của mỗi chữ số không vượt quá số lần xuất hiện của chúng</b> trong hai tập đó.<br>
-        (ví dụ: Nếu tập số hiện tại là 1123 thì được sử dụng tối đa hai chữ số 1, một chữ số 2, một chữ số 3,
-        và không được sử dụng các chữ số khác ba chữ số trên)
-    </p>
+    
+    <div id="SubTitle">
+        <p id="introduction0">Mật mã có dạng: <b>abcd</b></p>
+        <button id="openIntroPopup" onclick="openIntroPopup()">?</button>
+    </div>
 
     <div>
-        <button id="status" onclick="changeStatus()">Start</button>
+        <button id="status" onclick="changeStatus()">&#9205</button>
         <p id="timer"></p>
     </div>
 
     <div class="container">
         <div class="firstColumn">
             <div id="currentnumber">
-                <h2>Tập số hiện tại</h2>
+                <h2>Tập số được dùng</h2>
                 <p id="startIntro"></p>
                 <p id="player-numbers"></p>
             </div>
 
             <div id="buy" class="slide active">
                 <h2>Mua một<br>chữ số ngẫu nhiên</h2>
-                <button class="actionButton" id="buyNumberButton" onclick="buyRandomNumber()">Mua</button>
+                <button class="actionButton" id="buyNumberButton" onclick="buyRandomNumber()">🛒</button>
                 <div id="remainingbuy"></div>
                 <div id="throwError4"></div>
             </div>
 
             <div id="typeAnswer">
-                <h2>Nhập đáp án</h2>
-                <input type="number" id="answer" min="0" max="9999">
-                <button class="actionButton" id="submitButton" onclick="submitTheAnswer()">&#8629</button>
+                <h2>Giải</h2>
+                <input type="number" id="answer" min="0" max="9999" placeholder="answer">
+                <button class="actionButton" id="submitButton" onclick="submitTheAnswer()">&#8594</button>
                 <div id="submitAnswer"></div>
                 <div id="remainingsubmit"></div>
             </div>
@@ -64,44 +56,45 @@ Lưu ý:<br>
                 </div>
 
                 <div id="compareExpression" class="slide">
-                    <button class="toolIntro" id="toolIntro1" onclick="changeIntro1Status()">Xem hướng dẫn</button>
-                    <p class="toolIntroContent" id="compareExpressionIntro">Nhập hai biểu thức cộng, trừ, nhân, trong đó một biểu thức sử dụng 2-3 chữ số trong mật mã (a,b,c,d)
-                    và biểu thức còn lại gồm 2-3 chữ số trong tập số hiện tại
-                    để nhận được kết quả so sánh giữa hai biểu thức (lớn hơn, nhỏ hơn, bằng)<br>
-                    Lưu ý:<br>
-                    - Số chữ số được sử dụng ở hai biểu thức phải bằng nhau<br>
-                    - Không được ghép bất kỳ 2 chữ số trở lên nào để tạo thành số mới<br><br></p>
+                    <button class="toolIntro" id="toolIntro1" onclick="changeIntro1Status()">?</button>
+                    <p class="toolIntroContent" id="compareExpressionIntro">
+                    Nhập hai biểu thức cộng, trừ, nhân, trong đó một biểu thức sử dụng 2-3 chữ số trong mật mã (a,b,c,d)
+                    và biểu thức còn lại gồm 2-3 chữ số trong tập số được dùng
+                    để nhận được kết quả so sánh giữa hai biểu thức (lớn hơn, nhỏ hơn, bằng)<br><br>
+                    ⚠️ Số chữ số được sử dụng ở hai biểu thức phải bằng nhau<br>
+                    ⚠️ Không được ghép bất kỳ 2 chữ số trở lên nào để tạo thành số mới<br><br></p>
 
                     <div>
-                        <label>Nhập biểu thức 1 (gồm các chữ số ở mật mã):<br></label>
+                        <label>Biểu thức 1 (a, b, c, d):<br></label>
                         <input type="text" id="expression1"><br><br>
                     </div>
 
                     <div>
-                        <label>Nhập biểu thức 2 (gồm các chữ số ở tập số hiện tại):<br></label>
+                        <label>Biểu thức 2 (tập số được dùng):<br></label>
                         <input type="text" id="expression2"><br><br>
                     </div>
 
-                    <button class="actionButton" id="compare" onclick="compareExpression()">So sánh 2 biểu thức</button>
+                    <button class="actionButton" id="compare" onclick="compareExpression()">So sánh</button>
                     <div id="throwError1"></div>
                 </div>
                 
                 <div id="checkProperties" class="slide">
-                    <button class="toolIntro" id="toolIntro2" onclick="changeIntro2Status()">Xem hướng dẫn</button>
-                    <p class="toolIntroContent" id="checkPropertiesIntro">Tạo một số có từ 2 đến 4 chữ số gồm các chữ số ở trong mật mã (a, b, c, d) hoặc ở trong tập số hiện tại
-                    để nhận được tính chất của số đó (chính phương, nguyên tố, hoàn hảo, không thuộc cả 3 loại trên)<br>
-                    Lưu ý: Số được tạo phải có ít nhất 2 chữ số từ mật mã<br><br></p>
-                    <label><br>Nhập số tạo được:</label>
+                    <button class="toolIntro" id="toolIntro2" onclick="changeIntro2Status()">?</button>
+                    <p class="toolIntroContent" id="checkPropertiesIntro">
+                    Tạo một số có từ 2 đến 4 chữ số gồm các chữ số ở trong mật mã (a, b, c, d) hoặc ở trong tập số được dùng
+                    để nhận được tính chất của số đó (chính phương, nguyên tố, hoàn hảo, không thuộc cả 3 loại trên)<br><br>
+                    ⚠️ Số được tạo phải có ít nhất 2 chữ số từ mật mã<br><br></p>
+                    <label><br>Số tạo được:</label>
                     <input type="text" id="numToCheckProperties">
-                    <button class="actionButton" id="checkPropertiesButton" onclick="checkProperties()">Kiểm tra tính chất</button>
+                    <button class="actionButton" id="checkPropertiesButton" onclick="checkProperties()">Kiểm tra</button>
                     <div id="throwError2"></div>
                 </div>
                 
                 <div id="matchCode" class="slide">
-                    <button class="toolIntro" id="toolIntro3" onclick="changeIntro3Status()">Xem hướng dẫn</button>
-                    <p class="toolIntroContent" id="matchCodeIntro">Tạo một số có 4 chữ số gồm các chữ số ở trong tập số hiện tại
+                    <button class="toolIntro" id="toolIntro3" onclick="changeIntro3Status()">?</button>
+                    <p class="toolIntroContent" id="matchCodeIntro">Tạo một số có 4 chữ số gồm các chữ số ở trong tập số được dùng
                     để đối chiếu với mật mã và nhận được số chữ số đúng và ở đúng vị trí, số chữ số đúng nhưng ở sai vị trí<br><br></p>
-                    <label><br>Nhập số tạo được:</label>
+                    <label><br>Số tạo được:</label>
                     <input type="text" id="match-input" maxlength="4">
                     <button class="actionButton" id="matchCodeButton" onclick="matchCode()">Đối chiếu</button>
                     <div id="throwError3"></div>
@@ -110,13 +103,29 @@ Lưu ý:<br>
         </div>
 
         <div class="searchBox">
-            <h2>Kết quả thu được:</h2>
+            <h2>Kết quả</h2>
             <br>
             <div id="searchLog"></div>
         </div>
     </div>
 
     <div id="allScreen">
+        <div id="intro-popup">
+            <h2>Hướng dẫn cách chơi</h2>
+            <p id="introduction1">
+                Mật mã là một số trong đoạn từ 0 đến 9999 đã bị ẩn dưới dạng <b>abcd</b> với a, b, c, d là các chữ số trong đoạn từ 0 đến 9<br><br>
+                Hãy sử dụng <b>các chữ số trên cùng với các chữ số từ tập số được dùng</b> cho ba công cụ <b>SO SÁNH, GHÉP SỐ, ĐỐI CHIẾU</b><br>
+                để tìm ra các manh mối từ đó giải được mật mã trong thời gian và số lượt nhập quy định!
+            </p>
+            <p id="introduction2">
+                ⚠️ Mỗi lượt sử dụng công cụ sẽ bị <b>trừ đi một lượng thời gian bằng giá của công cụ đó</b><br>
+                ⚠️ Mỗi lần sử dụng công cụ <b>chỉ được phép dùng các chữ số có sẵn trong mật mã (a, b, c, d) và tập số được dùng</b>,
+                với <b>số lần sử dụng của mỗi chữ số không vượt quá số lần xuất hiện của chúng</b> trong hai tập đó.<br><br>
+                    (ví dụ: Nếu tập số được dùng là 1123 thì được sử dụng tối đa hai chữ số 1, một chữ số 2, một chữ số 3,
+                    và không được sử dụng các chữ số khác ba chữ số trên)
+            </p>
+            <button id="closeIntroPopup" onclick="closeIntroPopup()">&#10006</button>
+        </div>
         <div id="result-popup">
             <h1 id="result-title"></h1>
             <p id="result-content"></p>
