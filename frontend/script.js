@@ -402,24 +402,24 @@ async function popupResult(isWon) {
     changeStatus();
 
     if (isWon) {
-        document.getElementById("result-title").innerHTML = "Giải mã thành công";
+        document.getElementById("result-title").innerHTML = "GIẢI MÃ THÀNH CÔNG";
         document.getElementById("result-title").style.color = "lime";
-        document.getElementById("result-content").innerHTML = "Xin chúc mừng! Bạn đã tìm ra đúng mật mã được ẩn giấu.";
+        document.getElementById("result-content").innerHTML = "Xin chúc mừng! Bạn đã hoàn thành hóa giải mật mã.";
         document.getElementById("close-popup").innerHTML = "Tuyệt!";
         document.getElementById("close-popup").style.backgroundColor = "#015901";
     } else {
-        document.getElementById("result-title").innerHTML = "Giải mã thất bại";
+        document.getElementById("result-title").innerHTML = "GIẢI MÃ THẤT BẠI";
         document.getElementById("result-title").style.color = "red";
-        document.getElementById("result-content").innerHTML = "Rất tiếc, bạn đã không tìm được đáp án chính xác. Chúc bạn may mắn lần sau!";
+        document.getElementById("result-content").innerHTML = "Rất tiếc, mật mã đã không thể bị hóa giải. Chúc bạn may mắn lần sau!";
         document.getElementById("close-popup").innerHTML = "Lại!";
         document.getElementById("close-popup").style.backgroundColor = "#6c0703";
     }
 
     if (correctAnswer != -1) {
-        document.getElementById("correct-answer").innerHTML = "Mật mã được ẩn giấu là " + correctAnswer + ".";
+        document.getElementById("correct-answer").innerHTML = "abcd = " + correctAnswer;
         document.getElementById("result-popup").style.display = "block";
     } else {
-        document.getElementById("correct-answer").innerHTML = "Xin lỗi hệ thống không thể trích xuất đáp án từ máy chủ server!";
+        document.getElementById("correct-answer").innerHTML = "Lỗi! Hệ thống không thể trích xuất mật mã từ máy chủ server.";
     }
 
     document.getElementById("all-screen").style.display = "block";
