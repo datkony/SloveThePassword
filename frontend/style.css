@@ -352,7 +352,7 @@ h1 {
     color: #f0f0f0;
 }
 
-#timer-intro-popup {
+#available-number-intro-popup {
     display: none;
     position: absolute;
     margin-top: 5.5%;
@@ -366,11 +366,11 @@ h1 {
     overflow: auto;
 }
 
-#timer-intro-popup-content {
+#available-number-intro-popup-content {
     text-align: center;
 }
 
-.timer-container-tutorial {
+.available-number-container-tutorial {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -379,13 +379,13 @@ h1 {
     font-size: 125%;
 }
 
-.first-column-tutorial-timer {
+.first-column-tutorial-available-number {
     width: 20%;
 }
 
-.second-column-tutorial-timer {
+.second-column-tutorial-available-number {
     text-align: center;
-    background-color: #e3e0e0;
+    background-color: antiquewhite;
     padding: 10px;
     border: 1px solid black;
     border-radius: 5px;
@@ -433,7 +433,7 @@ h1 {
     opacity: 0.6;
 }
 
-#close-timer-intro-popup {
+#close-available-number-intro-popup {
     border: none;
     color: #ffffff;
     padding: 3px;
@@ -444,7 +444,7 @@ h1 {
     position: fixed;
 }
 
-#close-timer-intro-popup:hover {
+#close-available-number-intro-popup:hover {
     opacity: 0.6;
 }
 

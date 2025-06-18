@@ -197,16 +197,16 @@ async function checkProperties() {
 
         if (message == 'số chính phương') {
             pricePay(checkPropertiesCost);
-            addSearchResult(input + " là một số chính phương.");
+            addSearchResult(input + " là một số chính phương");
         } else if (message == 'số hoàn hảo') {
             pricePay(checkPropertiesCost);
-            addSearchResult(input + " là một số hoàn hảo.");
+            addSearchResult(input + " là một số hoàn hảo");
         } else if (message == 'số nguyên tố') {
             pricePay(checkPropertiesCost);
-            addSearchResult(input + " là một số nguyên tố.");
+            addSearchResult(input + " là một số nguyên tố");
         } else if (message == 'không là gì cả') {
             pricePay(checkPropertiesCost);
-            addSearchResult(input + " đều không phải số chính phương, hoàn hảo hay số nguyên tố.");
+            addSearchResult(input + " đều không phải số chính phương, hoàn hảo hay số nguyên tố");
         } else {
             throw message;
         }
@@ -238,7 +238,7 @@ async function matchCode() {
 
         if (message.charAt(message.length - 1) != '.') {
             pricePay(matchCodeCost);
-            addSearchResult(message + ".");
+            addSearchResult(message);
         } else {
             throw message;
         }
@@ -575,12 +575,12 @@ function closeIntroPopup() {
     document.getElementById("intro-popup").style.display = "none";
 }
 
-function openTimerIntroPopup() {
+function openAvailableNumberIntroPopup() {
     document.getElementById("all-screen").style.display = "block";
-    document.getElementById("timer-intro-popup").style.display = "block";
+    document.getElementById("available-number-intro-popup").style.display = "block";
 }
 
-function closeTimerIntroPopup() {
+function closeAvailableNumberIntroPopup() {
     document.getElementById("all-screen").style.display = "none";
-    document.getElementById("timer-intro-popup").style.display = "none";
+    document.getElementById("available-number-intro-popup").style.display = "none";
 }

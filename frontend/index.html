@@ -24,7 +24,7 @@
             <div id="current-number">
                 <div id="current-number-title-merge">
                     <h2>Số được dùng</h2>
-                    <button id="open-timer-intro-popup" onclick="openTimerIntroPopup()">?</button>
+                    <button id="open-timer-intro-popup" onclick="openAvailableNumberIntroPopup()">?</button>
                 </div>
                 <p id="start-intro"></p>
                 <p id="player-numbers"></p>
@@ -61,11 +61,12 @@
                 <div id="compare-expression" class="slide">
                     <button class="tool-intro" id="tool-intro1" onclick="changeIntro1Status()">?</button>
                     <p class="tool-intro-content" id="compare-expression-intro">
-                    Nhập hai biểu thức <b>cộng, trừ, nhân</b>, trong đó một biểu thức sử dụng <b>2-3 chữ số trong mật mã (a,b,c,d)</b>
-                    và biểu thức còn lại gồm <b>2-3 chữ số trong tập số được dùng</b>
-                    để nhận được <b>kết quả so sánh</b> giữa hai biểu thức (lớn hơn, nhỏ hơn, bằng)<br><br>
-                    ⚠️ <b>Số chữ số</b> được sử dụng ở hai biểu thức phải <b>bằng nhau</b><br>
-                    ⚠️ <b>Không được ghép</b> bất kỳ 2 chữ số trở lên nào để tạo thành số mới<br><br></p>
+                        Nhập hai biểu thức <b>cộng, trừ, nhân</b>, trong đó một biểu thức sử dụng <b>2-3 chữ số trong mật mã (a,b,c,d)</b>
+                        và biểu thức còn lại gồm <b>2-3 chữ số trong tập số được dùng</b>
+                        để nhận được <b>kết quả so sánh</b> giữa hai biểu thức (lớn hơn, nhỏ hơn, bằng)<br><br>
+                        ⚠️ <b>Số chữ số</b> được sử dụng ở hai biểu thức phải <b>bằng nhau</b><br>
+                        ⚠️ <b>Không được ghép</b> bất kỳ 2 chữ số trở lên nào để tạo thành số mới<br><br>
+                    </p>
 
                     <div>
                         <label>Biểu thức 1 (a, b, c, d):<br></label>
@@ -84,9 +85,10 @@
                 <div id="check-properties" class="slide">
                     <button class="tool-intro" id="tool-intro2" onclick="changeIntro2Status()">?</button>
                     <p class="tool-intro-content" id="check-properties-intro">
-                    Tạo một số có <b>từ 2 đến 4 chữ số</b> gồm <b>các chữ số ở trong mật mã (a, b, c, d) hoặc ở trong tập số được dùng</b>
-                    để nhận được <b>tính chất</b> của số đó (chính phương, nguyên tố, hoàn hảo, không thuộc cả 3 loại trên)<br><br>
-                    ⚠️ Số được tạo phải có <b>ít nhất 2 chữ số từ mật mã</b><br><br></p>
+                        Tạo một số có <b>từ 2 đến 4 chữ số</b> gồm <b>các chữ số ở trong mật mã (a, b, c, d) hoặc ở trong tập số được dùng</b>
+                        để nhận được <b>tính chất</b> của số đó (chính phương, nguyên tố, hoàn hảo, không thuộc cả 3 loại trên)<br><br>
+                        ⚠️ Số được tạo phải có <b>ít nhất 2 chữ số từ mật mã</b><br><br>
+                    </p>
                     <label><br>Số tạo được:</label>
                     <input type="text" id="num-to-check-properties">
                     <button class="action-button" id="check-properties-button" onclick="checkProperties()">Kiểm tra</button>
@@ -96,7 +98,8 @@
                 <div id="match-code" class="slide">
                     <button class="tool-intro" id="tool-intro3" onclick="changeIntro3Status()">?</button>
                     <p class="tool-intro-content" id="match-code-intro">Tạo một số có <b>4 chữ số</b> gồm <b>các chữ số ở trong tập số được dùng</b>
-                    để đối chiếu với mật mã và nhận được <b>số chữ số đúng và ở đúng vị trí, số chữ số đúng nhưng ở sai vị trí</b><br><br></p>
+                        để đối chiếu với mật mã và nhận được <b>số chữ số đúng và ở đúng vị trí, số chữ số đúng nhưng ở sai vị trí</b><br><br>
+                    </p>
                     <label><br>Số tạo được:</label>
                     <input type="text" id="match-input" maxlength="4">
                     <button class="action-button" id="match-code-button" onclick="matchCode()">Đối chiếu</button>
@@ -231,18 +234,18 @@
             </div>
         </div>
 
-        <div id="timer-intro-popup">
-            <button id="close-timer-intro-popup" onclick="closeTimerIntroPopup()">&#10006</button>
+        <div id="available-number-intro-popup">
+            <button id="close-available-number-intro-popup" onclick="closeAvailableNumberIntroPopup()">&#10006</button>
 
-            <div id="timer-intro-popup-content">
+            <div id="available-number-intro-popup-content">
                 <h2>Tập số được dùng</h2>
                 <p>
                     ⚠️ Mỗi lần sử dụng công cụ <b>chỉ được phép dùng các chữ số có sẵn trong mật mã (a, b, c, d) và tập số được dùng</b>,<br>
                     với <b>số lần sử dụng của mỗi chữ số không vượt quá số lần xuất hiện của chúng</b> trong hai tập đó
                 </p>
 
-                <div class="timer-container-tutorial">
-                    <div class="first-column-tutorial-timer">
+                <div class="available-number-container-tutorial">
+                    <div class="first-column-tutorial-available-number">
                         <div id="current-number">
                             <h2>Số được dùng</h2>
                             <p id="player-numbers-tutorial">1 1 2 3</p>
@@ -251,7 +254,7 @@
 
                     <p id="infer-icon">⮕</p>
 
-                    <div class="second-column-tutorial-timer">
+                    <div class="second-column-tutorial-available-number">
                         <p id="input-box-tutorial"><b>1</b> + <b>1</b> ✅</p>
                         <p id="input-box-tutorial"><b>2</b> + <b>3</b> ✅</p>
                         <p id="input-box-tutorial"><b>2</b> + 2 ❌</p>

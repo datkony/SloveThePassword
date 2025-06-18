@@ -122,7 +122,7 @@ function checkExpression(latex1, latex2) {
     }
 
     if (counter < 2 || counter > 3) {
-        throw "Mỗi biểu thức đều phải dùng 2 hoặc 3 chữ số.";
+        throw "Mọi biểu thức đều phải dùng 2 hoặc 3 chữ số.";
     }
 
     for (let i = 0; i < latex2.length; i++) {
@@ -143,7 +143,7 @@ function checkExpression(latex1, latex2) {
             }
 
             if (markErr) {
-                throw "Chỉ được sủ dụng các chữ số từ tập số được dùng và mỗi vị trí trong tập chỉ được sử dụng một lần ở biểu thức 2.";
+                throw "Chỉ được sử dụng các chữ số từ tập số được dùng và mỗi vị trí trong tập chỉ được sử dụng một lần ở biểu thức 2.";
             }
         } else if (!mathChars.includes(latex2.charAt(i))) {
             throw "Chỉ được sử dụng các dấu +, -, *, () và các chữ số ở tập số được dùng để nhập biểu thức 2.";
@@ -228,7 +228,7 @@ function checkNumberForProperties(input) {
             }
 
             if (mark) {
-                throw "Chỉ được sủ dụng các chữ số từ mật mã hoặc tập số được dùng và mỗi vị trí chỉ được sử dụng một lần.";
+                throw "Chỉ được sử dụng các chữ số từ mật mã hoặc tập số được dùng và mỗi vị trí chỉ được sử dụng một lần.";
             }
         }
     }
