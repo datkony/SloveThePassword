@@ -22,7 +22,7 @@ h1 {
 }
 
 #open-intro-popup:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 #open-timer-intro-popup {
@@ -32,7 +32,7 @@ h1 {
 }
 
 #open-timer-intro-popup:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 #status {
@@ -61,7 +61,7 @@ h1 {
 }
 
 #status:hover {
-    opacity: 0.6;
+    opacity: 0.4;
 }
 
 .container {
@@ -159,7 +159,7 @@ h1 {
   
 /* Change background color of buttons on hover */
 .nav button:hover {
-    opacity: 0.6;
+    opacity: 0.4;
 }
 
 .slide {
@@ -202,7 +202,7 @@ h1 {
 }
 
 .action-button:hover {
-    opacity: 0.6;
+    opacity: 0.4;
 }
 
 #all-screen {
@@ -418,7 +418,7 @@ h1 {
 }
 
 #close-intro-popup:hover {
-    opacity: 0.6;
+    opacity: 0.4;
 }
 
 #close-popup {
@@ -430,7 +430,7 @@ h1 {
 }
 
 #close-popup:hover {
-    opacity: 0.6;
+    opacity: 0.4;
 }
 
 #close-available-number-intro-popup {
@@ -445,7 +445,7 @@ h1 {
 }
 
 #close-available-number-intro-popup:hover {
-    opacity: 0.6;
+    opacity: 0.4;
 }
 
 .tool-intro {
@@ -457,7 +457,7 @@ h1 {
 }
 
 .tool-intro:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .tool-intro-content {

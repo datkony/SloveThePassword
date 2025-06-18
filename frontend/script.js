@@ -60,8 +60,12 @@ async function freeNumber() {
             availableNumbers.pop();
         }
 
-        for (let i = 0; i < numOfFreeNumbers; i++) {
-            addAvailableNumbers();
+        for (let i = 0; i < Math.min(numOfFreeNumbers, 3); i++) {
+            addAvailableNumbers(false);
+        }
+
+        for (let i = 3; i < numOfFreeNumbers; i++) {
+            addAvailableNumbers(true);
         }
     } catch(err) {
         window.alert(err);
@@ -69,9 +73,16 @@ async function freeNumber() {
     }
 }
 
-async function addAvailableNumbers() {
+async function addAvailableNumbers(isZeroAvailable) {
     try {
-        let newNumber = Math.round(Math.random() * 8) + 1
+        let newNumber;
+
+        if (isZeroAvailable) {
+            newNumber = Math.round(Math.random() * 9);
+        } else {
+            newNumber = Math.round(Math.random() * 8) + 1;
+        }
+
         availableNumbers.push(newNumber);
 
         const response = await fetch('https://slove-the-password-backend.onrender.com/pushAvailableNumbers', {
@@ -115,7 +126,7 @@ function buyRandomNumber() {
         }
 
         numOfBuyRemaining--;
-        addAvailableNumbers();
+        addAvailableNumbers(true);
         document.getElementById("player-numbers").innerText = availableNumbers.join(" ");
         document.getElementById("remaining-buy").innerHTML = "Còn " + numOfBuyRemaining + " lượt";
     } catch(err) {
