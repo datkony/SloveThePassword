@@ -78,7 +78,7 @@
                         <input type="text" id="expression2"><br><br>
                     </div>
 
-                    <button class="action-button" id="compare" onclick="compareExpression()">So sánh</button>
+                    <button class="action-button" id="compare" onclick="sendCompareExpressionsRequest()">So sánh</button>
                     <div id="throw-error1"></div>
                 </div>
                 
@@ -91,7 +91,7 @@
                     </p>
                     <label><br>Số tạo được:</label>
                     <input type="text" id="num-to-check-properties">
-                    <button class="action-button" id="check-properties-button" onclick="checkProperties()">Kiểm tra</button>
+                    <button class="action-button" id="check-properties-button" onclick="sendCheckPropertiesRequest()">Kiểm tra</button>
                     <div id="throw-error2"></div>
                 </div>
                 
@@ -102,7 +102,7 @@
                     </p>
                     <label><br>Số tạo được:</label>
                     <input type="text" id="match-input" maxlength="4">
-                    <button class="action-button" id="match-code-button" onclick="matchCode()">Đối chiếu</button>
+                    <button class="action-button" id="match-code-button" onclick="sendMatchCodeRequest()">Đối chiếu</button>
                     <div id="throw-error3"></div>
                 </div>
             </div>

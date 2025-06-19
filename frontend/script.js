@@ -8,7 +8,6 @@ const numOfFreeNumbers = 4;
 
 let numOfSecondLeft = timesForEachPlay;
 let isPlaying = false;
-let availableNumbers = [];
 let searchedInformation = "";
 let numOfBuyRemaining = buyNumberCost.length;
 let numOfSubmitRemaining = maxNumOfSubmitAnswerTurn;
@@ -17,10 +16,43 @@ let isCompareExpressionIntroDisplay = false;
 let isCheckPropertiesIntroDisplay = false;
 let isMatchCodeIntroDisplay = false;
 
-// Tạo mật mã 
-firstGenerateNewSecretCode();
+// Nhận message từ server
+const socket = new WebSocket("wss://slove-the-password-backend.onrender.com");
 
-freeNumber();
+socket.onopen = () => {
+    socket.send(JSON.stringify({ type: "Hello Server!" })); // ✅ Gửi sau khi đã kết nối
+    console.log('🟢 Client đã kết nối thành công');
+};
+
+socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    switch(data.type) {
+        case "compareExpressions":
+            printCompareExpressionsResult(data.message);
+            break;
+        case "checkProperties":
+            printCheckPropertiesResult(data.message);
+            break;
+        case "matchCode":
+            printMatchCodeResult(data.message);
+            break;
+        case "submitResult":
+            executeTheSubmitResult(data.message);
+            break;
+        case "availableNumbers":
+            executeReceivedAvailableNumbers(data.message);
+            break;
+        case "compareSecretCodeWithMidResult":
+            findTheSecretCodeThenPopup(data.isWon, data.message, data.lower, data.upper);
+            break;
+        default:
+            window.alert("Không thể nhận diện message gửi từ client: " + data.type);
+            break;
+    }
+};
+
+
 document.getElementById("start-intro").innerHTML = "Khởi điểm: " + numOfFreeNumbers + " chữ số";
 
 document.getElementById("compare-expression").style.display = "none";
@@ -44,63 +76,24 @@ document.getElementById("match-code-intro").style.display = "none";
 lockScreen();
 
 //Làm sạch tập số hiện tại và cấp phát các chữ số miễn phí mới
-async function freeNumber() {
-    try {
-        const response = await fetch('https://slove-the-password-backend.onrender.com/removeAllAvailableNumbers', {
-            method: 'POST',
-        });
-
-        const data = await response.json();
-
-        if (!data.message) {
-            throw "Không thể khởi tạo tập số mới. Hãy thử lại!";
-        }
-
-        while (availableNumbers.length != 0) {
-            availableNumbers.pop();
-        }
-
-        for (let i = 0; i < Math.min(numOfFreeNumbers, 3); i++) {
-            addAvailableNumbers(false);
-        }
-
-        for (let i = 3; i < numOfFreeNumbers; i++) {
-            addAvailableNumbers(true);
-        }
-    } catch(err) {
-        window.alert(err);
-        freeNumber();
-    }
+function freeNumber() {
+    socket.send(JSON.stringify({ type: "freeNumbers" }));
+}
+function generateNewSecretCode() {
+    socket.send(JSON.stringify({ type: "generate" }));
 }
 
-async function addAvailableNumbers(isZeroAvailable) {
-    try {
-        let newNumber;
+function addAvailableNumbers() {
+    socket.send(JSON.stringify({ type: "addAvailableNumbers" }));
+}
 
-        if (isZeroAvailable) {
-            newNumber = Math.round(Math.random() * 9);
-        } else {
-            newNumber = Math.round(Math.random() * 8) + 1;
-        }
+function executeReceivedAvailableNumbers(message) {
+    document.getElementById("player-numbers").innerText = message;
 
-        availableNumbers.push(newNumber);
-
-        const response = await fetch('https://slove-the-password-backend.onrender.com/pushAvailableNumbers', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ newNumber })
-        });
-
-        const data = await response.json();
-
-        if (!data.message) {
-            throw "Không thể cấp phát chữ số mới. Hãy thử lại!";
-        }
-    } catch(err) {
-        throw err;
-    }
+    document.getElementById("expression1").placeholder = "ví dụ: a + b";
+    document.getElementById("expression2").placeholder = "ví dụ: " + message.charAt(0) + " * " + message.charAt(2);
+    document.getElementById("num-to-check-properties").placeholder = "ví dụ: ab" + message.charAt(0) + message.charAt(2);
+    document.getElementById("match-input").placeholder = "ví dụ: " + message.charAt(0) + message.charAt(2) + message.charAt(4) + message.charAt(6);
 }
 
 function showSlide(slideId) {
@@ -126,8 +119,7 @@ function buyRandomNumber() {
         }
 
         numOfBuyRemaining--;
-        addAvailableNumbers(true);
-        document.getElementById("player-numbers").innerText = availableNumbers.join(" ");
+        addAvailableNumbers();
         document.getElementById("remaining-buy").innerHTML = "Còn " + numOfBuyRemaining + " lượt";
     } catch(err) {
         document.getElementById("throw-error4").innerHTML = err;
@@ -136,21 +128,17 @@ function buyRandomNumber() {
         
 // So sánh
 
-async function compareExpression() {
+function sendCompareExpressionsRequest() {
+    let latex1 = document.getElementById("expression1").value;
+    let latex2 = document.getElementById("expression2").value;
+
+    socket.send(JSON.stringify({ type: "compareExpressions", latex1: latex1, latex2: latex2 }));
+}
+
+function printCompareExpressionsResult(message) {
     try {
         let latex1 = document.getElementById("expression1").value;
         let latex2 = document.getElementById("expression2").value;
-
-        const response = await fetch('https://slove-the-password-backend.onrender.com/compareExpressions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ latex1, latex2 })
-        });
-
-        const result = await response.json();
-        const message = result.message;
         
         if (message == 'expression 1 value bigger') {
             pricePay(compareExpressionCost);
@@ -191,20 +179,15 @@ function standarlizationExpression(input) {
 
 // Ghép số
 
-async function checkProperties() {
+function sendCheckPropertiesRequest() {
+    let input = document.getElementById("num-to-check-properties").value;
+
+    socket.send(JSON.stringify({ type: "checkProperties", input: input }));
+}
+
+function printCheckPropertiesResult(message) {
     try {
         let input = document.getElementById("num-to-check-properties").value;
-
-        const response = await fetch('https://slove-the-password-backend.onrender.com/checkProperties', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ input })
-        });
-
-        const result = await response.json();
-        const message = result.message;
 
         if (message == 'số chính phương') {
             pricePay(checkPropertiesCost);
@@ -228,25 +211,16 @@ async function checkProperties() {
     }
 }
 
-
-
 // Đối chiếu
 
-async function matchCode() {
+function sendMatchCodeRequest() {
+    let inputCode = document.getElementById("match-input").value;
+
+    socket.send(JSON.stringify({ type: "matchCode", inputCode: inputCode }));
+}
+
+function printMatchCodeResult(message) {
     try {
-        let inputCode = document.getElementById("match-input").value;
-
-        const response = await fetch('https://slove-the-password-backend.onrender.com/matchCode', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ inputCode })
-        });
-
-        const result = await response.json();
-        const message = result.message;
-
         if (message.charAt(message.length - 1) != '.') {
             pricePay(matchCodeCost);
             addSearchResult(message);
@@ -273,34 +247,35 @@ async function submitTheAnswer() {
     if (!(answer >= 0 && answer <= 9999)) {
         document.getElementById("submit-answer").innerHTML = "Không hợp lệ. Mật mã phải nằm trong đoạn từ 0 đến 9999!";
     } else {
-        try {
-            const response = await fetch('https://slove-the-password-backend.onrender.com/check', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ guess: answer.toString() })
-            });
-
-            const data = await response.json();
-
-            if (data.result === 'correct') {
-                popupResult(true);
-            } else {
-                document.getElementById("submit-answer").innerHTML = "Mật mã không chính xác. Mời thử lại!";
-                numOfSubmitRemaining--;
-                document.getElementById("remaining-submit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
-
-                if (numOfSubmitRemaining == 0) {
-                    popupResult(false);    
-                }
-            }
-        } catch(err) {
-            document.getElementById("submit-answer").innerHTML = "Lỗi kết nối đến máy chủ.";
-        }
+        socket.send(JSON.stringify({ type: "checkGuess", guess: answer }));
     }
+}
 
-    
+function executeTheSubmitResult(result) {
+    try {
+        if (result == 'correct') {
+            findTheSecretCodeThenPopup(true);
+        } else {
+            document.getElementById("submit-answer").innerHTML = "Mật mã không chính xác. Mời thử lại!";
+            numOfSubmitRemaining--;
+            document.getElementById("remaining-submit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
+
+            if (numOfSubmitRemaining == 0) {
+                findTheSecretCodeThenPopup(false);    
+            }
+        }
+    } catch(err) {
+        document.getElementById("submit-answer").innerHTML = "Lỗi kết nối đến máy chủ.";
+    }
+}
+
+// Hàm dò mật mã bằng binary search rồi thông báo kết quả qua popup
+function findTheSecretCodeThenPopup(isWon, message = "", lower = 0, upper = 9999) {
+    if (message == 'equal') {
+        popupResult(isWon, parseInt((lower + upper) / 2)); 
+    } else {
+        socket.send(JSON.stringify({ type: "compareSecretCodeWithMid", lower: lower, upper: upper, isWon: isWon }));
+    }
 }
 
 // Điều khiển Slide
@@ -328,10 +303,8 @@ function showSlide(slide) {
 function changeStatus() {
     try {
         if (isPlaying) {
-            generateNewSecretCode();
             isPlaying = false;
-
-            freeNumber();
+            
             searchedInformation = "";
             numOfBuyRemaining = buyNumberCost.length;
             numOfSubmitRemaining = maxNumOfSubmitAnswerTurn;
@@ -368,60 +341,41 @@ function changeStatus() {
             document.getElementById("num-to-check-properties").value = "";
             document.getElementById("match-input").value = "";
         } else {
+            freeNumber();
+            generateNewSecretCode();
+
             isPlaying = true;
             unlockScreen();
 
             document.getElementById("status").innerHTML = "&#8634";
             document.getElementById("status").style.backgroundColor = "#6c0703";
-            document.getElementById("player-numbers").innerText = availableNumbers.join(" ");
             document.getElementById("start-intro").style.display = "none";
-
             document.getElementById("buy-number-button").innerHTML = "🛒 (🏷️" + buyNumberCost[0] + "s)";
-
-            document.getElementById("expression1").placeholder = "ví dụ: a + b";
-            document.getElementById("expression2").placeholder = "ví dụ: " + availableNumbers[0] + " * " + availableNumbers[1];
-            document.getElementById("num-to-check-properties").placeholder = "ví dụ: ab" + availableNumbers[0] + availableNumbers[1];
-            document.getElementById("match-input").placeholder = "ví dụ: " + availableNumbers[0] + availableNumbers[1] + availableNumbers[2] + availableNumbers[3];
         }
     } catch(err) {
         window.alert(err);
     }
 }
 
-async function popupResult(isWon) {
-    let correctAnswer = -1;
-
-    try {
-        const response = await fetch('https://slove-the-password-backend.onrender.com/secret');
-        const data = await response.json();
-        correctAnswer = data.secret;
-    } catch (error) {
-        //Do nothing
-    }
-
+function popupResult(isWon, correctAnswer) {
     changeStatus();
 
     if (isWon) {
         document.getElementById("result-title").innerHTML = "GIẢI MÃ THÀNH CÔNG";
         document.getElementById("result-title").style.color = "lime";
-        document.getElementById("result-content").innerHTML = "Xin chúc mừng! Bạn đã hoàn thành hóa giải mật mã.";
+        document.getElementById("result-content").innerHTML = "🎉 Xin chúc mừng! Bạn đã hoàn thành hóa giải mật mã.";
         document.getElementById("close-popup").innerHTML = "Tuyệt!";
         document.getElementById("close-popup").style.backgroundColor = "#015901";
     } else {
         document.getElementById("result-title").innerHTML = "GIẢI MÃ THẤT BẠI";
         document.getElementById("result-title").style.color = "red";
-        document.getElementById("result-content").innerHTML = "Rất tiếc, mật mã đã không thể bị hóa giải. Chúc bạn may mắn lần sau!";
+        document.getElementById("result-content").innerHTML = "😞 Rất tiếc, mật mã đã không thể bị hóa giải. Chúc bạn may mắn lần sau!";
         document.getElementById("close-popup").innerHTML = "Lại!";
         document.getElementById("close-popup").style.backgroundColor = "#6c0703";
     }
 
-    if (correctAnswer != -1) {
-        document.getElementById("correct-answer").innerHTML = "abcd = " + correctAnswer;
-        document.getElementById("result-popup").style.display = "block";
-    } else {
-        document.getElementById("correct-answer").innerHTML = "Lỗi! Hệ thống không thể trích xuất mật mã từ máy chủ server.";
-    }
-
+    document.getElementById("correct-answer").innerHTML = "abcd = " + correctAnswer;
+    document.getElementById("result-popup").style.display = "block";
     document.getElementById("all-screen").style.display = "block";
     lockScreen();
 }
@@ -505,7 +459,7 @@ setInterval(function countDown() {
     }
 
     if(numOfSecondLeft <= 0) {
-        popupResult (false);
+        findTheSecretCodeThenPopup(false);
     }
 }, 1000);
 
@@ -516,27 +470,6 @@ function pricePay(cost) {
 
     numOfSecondLeft -= cost;
     document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
-}
-
-async function generateNewSecretCode() {
-    const response = await fetch('https://slove-the-password-backend.onrender.com/generate', {
-        method: 'POST',
-    });
-
-    const data = await response.json();
-
-    if (!data.message) {
-        throw "Không thể tạo mật mã mới. Hãy thử lại!";
-    }
-}
-
-function firstGenerateNewSecretCode() {
-    try {
-        generateNewSecretCode();
-    } catch(err) {
-        window.alert(err);
-        firstGenerateNewSecretCode();
-    }
 }
 
 function changeIntro1Status() {
