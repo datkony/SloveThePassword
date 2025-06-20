@@ -28,7 +28,8 @@ wss.on('connection', (ws) => {
         try {
             switch(type) {
                 case "Hello Server!":
-                    console.log('🟢 Client đã kết nối thành công');
+                    console.log('🟢 Server đã kết nối thành công');
+                    ws.send(JSON.stringify({ type: "Hello Client!" }));
                     break;
                 case "generate":
                     generate();
@@ -37,7 +38,7 @@ wss.on('connection', (ws) => {
                     freeNumbers();
                     break;
                 case "addAvailableNumbers": 
-                    addAvailableNumbers(true);
+                    addAvailableNumbers(true, true);
                     break;
                 case "compareExpressions":
                     compareExpressions(data.latex1, data.latex2);
@@ -52,7 +53,7 @@ wss.on('connection', (ws) => {
                     checkGuess(data.guess);
                     break;
                 case "compareSecretCodeWithMid":
-                    compareSecretCodeWithMid(data.lower, data.upper, data.isWon);
+                    compareSecretCodeWithMid(data.lower, data.upper);
                     break;
                 default:
                     window.alert("Không thể nhận diện message gửi từ client: " + type);
@@ -377,21 +378,21 @@ wss.on('connection', (ws) => {
     
     function checkGuess(guess) {
         if (parseInt(guess) == secretCodeNumber) {
-            ws.send(JSON.stringify({ type: "submitResult", message: 'correct' }));
+            ws.send(JSON.stringify({ type: "submitResult", message: 'correct', answer: guess }));
         } else {
-            ws.send(JSON.stringify({ type: "submitResult", message: 'incorrect' }));
+            ws.send(JSON.stringify({ type: "submitResult", message: 'incorrect', answer: guess }));
         }
     }
     
-    function compareSecretCodeWithMid(lower, upper, isWon) {
+    function compareSecretCodeWithMid(lower, upper) {
         let mid = parseInt((lower + upper) / 2);
     
         if (secretCodeNumber == mid) {
-            ws.send(JSON.stringify({ type: "compareSecretCodeWithMidResult", message: 'equal', lower: lower, upper: upper, isWon: isWon }));
+            ws.send(JSON.stringify({ type: "compareSecretCodeWithMidResult", message: 'equal', lower: lower, upper: upper }));
         } else if (secretCodeNumber < mid) {
-            ws.send(JSON.stringify({ type: "compareSecretCodeWithMidResult", message: 'lower', lower: lower, upper: (mid - 1), isWon: isWon }));
+            ws.send(JSON.stringify({ type: "compareSecretCodeWithMidResult", message: 'lower', lower: lower, upper: (mid - 1) }));
         } else {
-            ws.send(JSON.stringify({ type: "compareSecretCodeWithMidResult", message: 'upper', lower: (mid + 1), upper: upper, isWon: isWon }));
+            ws.send(JSON.stringify({ type: "compareSecretCodeWithMidResult", message: 'upper', lower: (mid + 1), upper: upper }));
         }
     }
   

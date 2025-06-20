@@ -21,13 +21,15 @@ const socket = new WebSocket("wss://slove-the-password-backend.onrender.com");
 
 socket.onopen = () => {
     socket.send(JSON.stringify({ type: "Hello Server!" })); // ✅ Gửi sau khi đã kết nối
-    console.log('🟢 Client đã kết nối thành công');
 };
 
 socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
     switch(data.type) {
+        case "Hello Client!":
+            window.alert('🟢 Server đã kết nối thành công. 🎮 Trò chơi đã sẵn sàng!');
+            break;
         case "compareExpressions":
             printCompareExpressionsResult(data.message);
             break;
@@ -38,13 +40,13 @@ socket.onmessage = (event) => {
             printMatchCodeResult(data.message);
             break;
         case "submitResult":
-            executeTheSubmitResult(data.message);
+            executeTheSubmitResult(data.message, data.answer);
             break;
         case "availableNumbers":
             executeReceivedAvailableNumbers(data.message);
             break;
         case "compareSecretCodeWithMidResult":
-            findTheSecretCodeThenPopup(data.isWon, data.message, data.lower, data.upper);
+            findTheSecretCodeThenPopupWhenFalse(data.message, data.lower, data.upper);
             break;
         default:
             window.alert("Không thể nhận diện message gửi từ client: " + data.type);
@@ -251,17 +253,17 @@ async function submitTheAnswer() {
     }
 }
 
-function executeTheSubmitResult(result) {
+function executeTheSubmitResult(result, answer) {
     try {
         if (result == 'correct') {
-            findTheSecretCodeThenPopup(true);
+            popupResult(true, answer);
         } else {
             document.getElementById("submit-answer").innerHTML = "Mật mã không chính xác. Mời thử lại!";
             numOfSubmitRemaining--;
             document.getElementById("remaining-submit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
 
             if (numOfSubmitRemaining == 0) {
-                findTheSecretCodeThenPopup(false);    
+                findTheSecretCodeThenPopupWhenFalse();    
             }
         }
     } catch(err) {
@@ -269,12 +271,12 @@ function executeTheSubmitResult(result) {
     }
 }
 
-// Hàm dò mật mã bằng binary search rồi thông báo kết quả qua popup
-function findTheSecretCodeThenPopup(isWon, message = "", lower = 0, upper = 9999) {
+// Hàm dò mật mã bằng binary search rồi thông báo kết quả qua popup trong trường hợp thất bại
+function findTheSecretCodeThenPopupWhenFalse(message = "", lower = 0, upper = 9999) {
     if (message == 'equal') {
-        popupResult(isWon, parseInt((lower + upper) / 2)); 
+        popupResult(false, parseInt((lower + upper) / 2)); 
     } else {
-        socket.send(JSON.stringify({ type: "compareSecretCodeWithMid", lower: lower, upper: upper, isWon: isWon }));
+        socket.send(JSON.stringify({ type: "compareSecretCodeWithMid", lower: lower, upper: upper }));
     }
 }
 
@@ -459,7 +461,7 @@ setInterval(function countDown() {
     }
 
     if(numOfSecondLeft <= 0) {
-        findTheSecretCodeThenPopup(false);
+        findTheSecretCodeThenPopupWhenFalse();
     }
 }, 1000);
 
