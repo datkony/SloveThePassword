@@ -25,7 +25,7 @@ SloveThePassword
 
 ## 🚀 Live Demo
 
-- **Frontend**: [https://datkony.github.io/SloveThePassword/frontend](https://datkony.github.io/SloveThePassword/frontend)  
+[https://datkony.github.io/SloveThePassword/frontend](https://datkony.github.io/SloveThePassword/frontend)  
 
 ---
 
