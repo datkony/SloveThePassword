@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess The Code</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
     <h1>Truy tìm mật mã</h1>
@@ -61,10 +62,11 @@
                 <div id="compare-expression" class="slide">
                     <button class="tool-intro" id="tool-intro1" onclick="changeIntro1Status()">?</button>
                     <p class="tool-intro-content" id="compare-expression-intro">
-                        Nhập hai biểu thức <b>cộng, trừ, nhân</b>, trong đó một biểu thức sử dụng <b>2-3 chữ số trong mật mã (a,b,c,d)</b>
-                        và biểu thức còn lại gồm <b>2-3 chữ số trong tập số được dùng</b>
-                        để nhận được <b>kết quả so sánh</b> giữa hai biểu thức (lớn hơn, nhỏ hơn, bằng)<br><br>
-                        ⚠️ <b>Số chữ số</b> được sử dụng ở hai biểu thức phải <b>bằng nhau</b><br>
+                        <b>Dùng các dấu +, -, *, ()</b> tạo một biểu thức chứa <b>3 chữ số trong mật mã <br>
+                        (a, b, c, d)</b> và một biểu thức chứa <b>3 chữ số trong tập số được dùng</b><br>
+                        để nhận được <b>kết quả so sánh</b> giữa hai biểu thức trên (&gt, &lt, =)<br><br>
+                        ⚠️ <b>Số lượng từng loại dấu (kể cả dấu ngoặc)</b> và <b>thứ tự các dấu</b><br>
+                        ở hai biểu thức phải <b>giống hệt nhau</b><br>
                         ⚠️ <b>Không được ghép</b> bất kỳ 2 chữ số trở lên nào để tạo thành số mới<br><br>
                     </p>
 
@@ -78,7 +80,7 @@
                         <input type="text" id="expression2"><br><br>
                     </div>
 
-                    <button class="action-button" id="compare" onclick="sendCompareExpressionsRequest()">So sánh</button>
+                    <button class="action-button" id="compare" onclick="compareExpressions()">So sánh</button>
                     <div id="throw-error1"></div>
                 </div>
                 
@@ -91,7 +93,7 @@
                     </p>
                     <label><br>Số tạo được:</label>
                     <input type="text" id="num-to-check-properties">
-                    <button class="action-button" id="check-properties-button" onclick="sendCheckPropertiesRequest()">Kiểm tra</button>
+                    <button class="action-button" id="check-properties-button" onclick="checkProperties()">Kiểm tra</button>
                     <div id="throw-error2"></div>
                 </div>
                 
@@ -102,7 +104,7 @@
                     </p>
                     <label><br>Số tạo được:</label>
                     <input type="text" id="match-input" maxlength="4">
-                    <button class="action-button" id="match-code-button" onclick="sendMatchCodeRequest()">Đối chiếu</button>
+                    <button class="action-button" id="match-code-button" onclick="matchCode()">Đối chiếu</button>
                     <div id="throw-error3"></div>
                 </div>
             </div>
@@ -221,7 +223,7 @@
                         <p>➕</p>
 
                         <div id="price-tutorial">
-                            🏷️20s
+                            - 20s
                         </div>
                     </div>
 

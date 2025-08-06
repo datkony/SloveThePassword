@@ -6,6 +6,15 @@ const buyNumberCost = [60, 90]; //Giá cho mỗi lần mua chữ số
 const maxNumOfSubmitAnswerTurn = 3;
 const numOfFreeNumbers = 4;
 
+const letterChars = ['a', 'b', 'c', 'd'];
+const mathChars = ['+', '-', '*', '(', ')'];
+
+let timer = null; //Biến cài đặt interval để tính giờ
+
+const cryptoJsKey = "dit-cu-may-thich-doc-trom-dap-an-khong?";
+let encryptedSecretCode;
+let availableNumbers = [];
+
 let numOfSecondLeft = timesForEachPlay;
 let isPlaying = false;
 let searchedInformation = "";
@@ -15,45 +24,6 @@ let numOfSubmitRemaining = maxNumOfSubmitAnswerTurn;
 let isCompareExpressionIntroDisplay = false;
 let isCheckPropertiesIntroDisplay = false;
 let isMatchCodeIntroDisplay = false;
-
-// Nhận message từ server
-const socket = new WebSocket("wss://slove-the-password-backend.onrender.com");
-
-socket.onopen = () => {
-    socket.send(JSON.stringify({ type: "Hello Server!" })); // ✅ Gửi sau khi đã kết nối
-};
-
-socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-
-    switch(data.type) {
-        case "Hello Client!":
-            window.alert('🟢 Server đã kết nối thành công. 🎮 Trò chơi đã sẵn sàng!');
-            break;
-        case "compareExpressions":
-            printCompareExpressionsResult(data.message);
-            break;
-        case "checkProperties":
-            printCheckPropertiesResult(data.message);
-            break;
-        case "matchCode":
-            printMatchCodeResult(data.message);
-            break;
-        case "submitResult":
-            executeTheSubmitResult(data.message, data.answer);
-            break;
-        case "availableNumbers":
-            executeReceivedAvailableNumbers(data.message);
-            break;
-        case "compareSecretCodeWithMidResult":
-            findTheSecretCodeThenPopupWhenFalse(data.message, data.lower, data.upper);
-            break;
-        default:
-            window.alert("Không thể nhận diện message gửi từ client: " + data.type);
-            break;
-    }
-};
-
 
 document.getElementById("start-intro").innerHTML = "Khởi điểm: " + numOfFreeNumbers + " chữ số";
 
@@ -66,9 +36,9 @@ document.getElementById("remaining-buy").innerHTML = "Còn " + numOfBuyRemaining
 document.getElementById("remaining-submit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
 document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
 
-document.getElementById("tab1").innerHTML = "So sánh<br/>🏷️" + compareExpressionCost + "s";
-document.getElementById("tab2").innerHTML = "Ghép số<br/>🏷️" + checkPropertiesCost + "s";
-document.getElementById("tab3").innerHTML = "Đối chiếu<br/>🏷️" + matchCodeCost + "s";
+document.getElementById("tab1").innerHTML = "So sánh<br/>- " + compareExpressionCost + "s";
+document.getElementById("tab2").innerHTML = "Ghép số<br/>- " + checkPropertiesCost + "s";
+document.getElementById("tab3").innerHTML = "Đối chiếu<br/>- " + matchCodeCost + "s";
 
 document.getElementById("compare-expression-intro").style.display = "none";
 document.getElementById("check-properties-intro").style.display = "none";
@@ -78,22 +48,51 @@ document.getElementById("match-code-intro").style.display = "none";
 lockScreen();
 
 //Làm sạch tập số hiện tại và cấp phát các chữ số miễn phí mới
-function freeNumber() {
-    socket.send(JSON.stringify({ type: "freeNumbers" }));
+
+function freeNumbers() {
+    while (availableNumbers.length != 0) {
+        availableNumbers.pop();
+    }
+
+    const digits = [...Array(10).keys()]; // [0,1,2,...,9]
+  
+    // Fisher-Yates Shuffle
+    for (let i = digits.length - 1; i >= numOfFreeNumbers; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [digits[i], digits[j]] = [digits[j], digits[i]];
+    }
+
+    for (let i = 0; i < numOfFreeNumbers; i++) {
+        availableNumbers.push(digits[i]);
+    }
+
+    executeReceivedAvailableNumbers();
 }
+
 function generateNewSecretCode() {
-    socket.send(JSON.stringify({ type: "generate" }));
+    let secretCode = Math.floor(Math.random() * 10000);
+    encryptSecretCode(secretCode);
+}
+
+function encryptSecretCode(secretCode) {
+    encryptedSecretCode = CryptoJS.AES.encrypt(secretCode.toString(), cryptoJsKey).toString();
+}
+
+function decryptSecretCode() {
+    const bytes = CryptoJS.AES.decrypt(encryptedSecretCode, cryptoJsKey);
+    return parseInt(bytes.toString(CryptoJS.enc.Utf8));
 }
 
 function addAvailableNumbers() {
-    socket.send(JSON.stringify({ type: "addAvailableNumbers" }));
+    availableNumbers.push(Math.floor(Math.random() * 10));
 }
 
-function executeReceivedAvailableNumbers(message) {
+function executeReceivedAvailableNumbers() {
+    let message = availableNumbers.join(" ");
     document.getElementById("player-numbers").innerText = message;
 
-    document.getElementById("expression1").placeholder = "ví dụ: a + b";
-    document.getElementById("expression2").placeholder = "ví dụ: " + message.charAt(0) + " * " + message.charAt(2);
+    document.getElementById("expression1").placeholder = "ví dụ: a + b + c";
+    document.getElementById("expression2").placeholder = "ví dụ: " + message.charAt(0) + " + " + message.charAt(2) + " + " + message.charAt(4);
     document.getElementById("num-to-check-properties").placeholder = "ví dụ: ab" + message.charAt(0) + message.charAt(2);
     document.getElementById("match-input").placeholder = "ví dụ: " + message.charAt(0) + message.charAt(2) + message.charAt(4) + message.charAt(6);
 }
@@ -117,12 +116,14 @@ function buyRandomNumber() {
             document.getElementById("buy-number-button").style.display = "none";
         } else { 
             let buyNumberCostNext = buyNumberCost[buyNumberCost.length + 1 - numOfBuyRemaining];
-            document.getElementById("buy-number-button").innerHTML = "🛒 (🏷️" + buyNumberCostNext + "s)";
+            document.getElementById("buy-number-button").innerHTML = "🛒 (- " + buyNumberCostNext + "s)";
         }
 
         numOfBuyRemaining--;
         addAvailableNumbers();
         document.getElementById("remaining-buy").innerHTML = "Còn " + numOfBuyRemaining + " lượt";
+
+        document.getElementById("player-numbers").innerText = availableNumbers.join(" ")
     } catch(err) {
         document.getElementById("throw-error4").innerHTML = err;
     }
@@ -130,49 +131,133 @@ function buyRandomNumber() {
         
 // So sánh
 
-function sendCompareExpressionsRequest() {
-    let latex1 = document.getElementById("expression1").value;
-    let latex2 = document.getElementById("expression2").value;
+function compareExpressions() {
+    let isEvalError = false;
 
-    socket.send(JSON.stringify({ type: "compareExpressions", latex1: latex1, latex2: latex2 }));
-}
+    try {   
+        let latex1 = deleteSpaceInExpression(document.getElementById("expression1").value);
+        let latex2 = deleteSpaceInExpression(document.getElementById("expression2").value);
 
-function printCompareExpressionsResult(message) {
-    try {
-        let latex1 = document.getElementById("expression1").value;
-        let latex2 = document.getElementById("expression2").value;
-        
-        if (message == 'expression 1 value bigger') {
+        checkExpression(latex1,latex2);
+
+        isEvalError = true;
+        let result1 = eval(exchangeLetterToNumber(latex1));
+        let result2 = eval(latex2);
+        isEvalError = false;
+
+        if (result1 > result2) {
             pricePay(compareExpressionCost);
             addSearchResult(standarlizationExpression(latex1) + " &gt " + standarlizationExpression(latex2));
-        } else if (message == 'expression 2 value bigger') {
+        } else if (result1 < result2) {
             pricePay(compareExpressionCost);
             addSearchResult(standarlizationExpression(latex1) + " &lt " + standarlizationExpression(latex2));
-        } else if (message == '2 expressions value are equal') {
+        } else {
             pricePay(compareExpressionCost);
             addSearchResult(standarlizationExpression(latex1) + " = " + standarlizationExpression(latex2));
-        } else {
-            throw message;
         }
 
         document.getElementById("throw-error1").innerHTML = "";
-    } catch(err) {    
+    } catch(err) {
+        if (isEvalError) {
+            err = "Không thể thực hiện tính toán các biểu thức vừa nhập.";
+        }
+
         document.getElementById("throw-error1").innerHTML = "Không hợp lệ! " + err;
     }
 }
 
+function deleteSpaceInExpression(input) {
+    let output = "";
+
+    for (let i = 0; i < input.length; i++) {
+        if (input.charAt(i) != ' ') {
+            output += input.charAt(i);
+        }
+    }
+
+    return output;
+}
+
+function checkExpression(latex1, latex2) {
+    let markLetterChars = [true, true, true, true];
+    let markAvailableNums = [];
+    let counter = 0;
+
+    
+    for (i in availableNumbers) {
+        markAvailableNums.push(true);
+    }
+
+    for (let i = 0; i < latex1.length; i++) {
+        let mark = true;
+        for (let j = 0; j < 4; j++) {
+            if (latex1.charAt(i) == letterChars[j]) {
+                if (i != 0 && letterChars.includes(latex1.charAt(i - 1))) {
+                    throw "Không được ghép bất kỳ hai chữ số trở nên nào ở biểu thức 1 để tạo thành số mới.";
+                }
+
+                if (markLetterChars[j]) {
+                    markLetterChars[j] = false;
+                    mark = false;
+                    counter++;
+                    break;
+                } else {
+                    throw "Các chữ số ở mật mã chỉ được sử dụng duy nhất một lần ở biểu thức 1.";
+                }
+            }
+        }
+
+        if (mark && !mathChars.includes(latex1.charAt(i))) {
+            throw "Chỉ được sử dụng các dấu +, -, *, () và các chữ số a, b, c, d ở mật mã để nhập biểu thức 1.";
+        }
+    }
+
+    if (counter != 3) {
+        throw "Mọi biểu thức đều phải dùng 3 chữ số.";
+    }
+
+    for (let i = 0; i < latex2.length; i++) {
+        if (/^[0-9]$/.test(latex2.charAt(i))) {
+            if (i != 0 && /^[0-9]$/.test(latex2.charAt(i - 1))) {
+                throw "Không được ghép bất kỳ hai chữ số trở nên nào ở biểu thức 2 để tạo thành số mới.";
+            }
+
+            let markErr = true;
+
+            for (let j = 0; j < availableNumbers.length; j++) {
+                if (((latex2.charAt(i) - '0') == availableNumbers[j]) && markAvailableNums[j]) {
+                    markAvailableNums[j] = false;
+                    markErr = false;
+                    counter--;
+                    break;    
+                }
+            }
+
+            if (markErr) {
+                throw "Chỉ được sử dụng các chữ số từ tập số được dùng và mỗi vị trí trong tập chỉ được sử dụng một lần ở biểu thức 2.";
+            }
+        } else if (!mathChars.includes(latex2.charAt(i))) {
+            throw "Chỉ được sử dụng các dấu +, -, *, () và các chữ số ở tập số được dùng để nhập biểu thức 2.";
+        } else if (i >= latex1.length || latex2.charAt(i) != latex1.charAt(i)) {
+            throw "Số lượng từng loại dấu (kể cả dấu ngoặc) và thứ tự các dấu ở hai biểu thức phải giống hệt nhau.";
+        }
+    }
+
+    if (counter != 0) {
+        throw "Mọi biểu thức đều phải dùng 3 chữ số.";
+    }
+
+}
 
 
 function standarlizationExpression(input) {
     let standarlizatedString = "";
 
     for (let i = 0; i < input.length; i++) {
-        if (input.charAt(i) != ' ') {
-            if (input.charAt(i) == '*') {
-                standarlizatedString += "&#215 ";
-            } else {
-                standarlizatedString += input.charAt(i) + " ";
-            }
+        if (input.charAt(i) == '*') {
+            standarlizatedString += "&#215 ";
+        } else {
+            standarlizatedString += input.charAt(i) + " ";
         }
     }
 
@@ -181,58 +266,203 @@ function standarlizationExpression(input) {
 
 // Ghép số
 
-function sendCheckPropertiesRequest() {
-    let input = document.getElementById("num-to-check-properties").value;
-
-    socket.send(JSON.stringify({ type: "checkProperties", input: input }));
-}
-
-function printCheckPropertiesResult(message) {
+function checkProperties() {
     try {
         let input = document.getElementById("num-to-check-properties").value;
 
-        if (message == 'số chính phương') {
+        checkNumberForProperties(input);
+
+        let numberExchanged = parseInt(exchangeLetterToNumber(input));
+        let sqrt = Math.sqrt(numberExchanged);
+
+        if (sqrt == Math.round(sqrt)) {
             pricePay(checkPropertiesCost);
             addSearchResult(input + " là một số chính phương");
-        } else if (message == 'số hoàn hảo') {
-            pricePay(checkPropertiesCost);
-            addSearchResult(input + " là một số hoàn hảo");
-        } else if (message == 'số nguyên tố') {
-            pricePay(checkPropertiesCost);
-            addSearchResult(input + " là một số nguyên tố");
-        } else if (message == 'không là gì cả') {
-            pricePay(checkPropertiesCost);
-            addSearchResult(input + " đều không phải số chính phương, hoàn hảo hay số nguyên tố");
         } else {
-            throw message;
+            let sumOfDivisior = 1;
+
+            for (let i = 2; i < sqrt; i++) {
+                if (numberExchanged % i == 0) {
+                    sumOfDivisior += (i + numberExchanged / i); 
+                }
+            }
+
+            if (sumOfDivisior == numberExchanged) {
+                pricePay(checkPropertiesCost);
+                addSearchResult(input + " là một số hoàn hảo");
+            } else if (sumOfDivisior == 1) {
+                pricePay(checkPropertiesCost);
+                addSearchResult(input + " là một số nguyên tố");
+            } else {
+                pricePay(checkPropertiesCost);
+                addSearchResult(input + " đều không phải số chính phương, hoàn hảo hay số nguyên tố");
+            }
         }
-        
+
         document.getElementById("throw-error2").innerHTML = "";
     } catch(err) {
         document.getElementById("throw-error2").innerHTML = "Không hợp lệ! " + err;
     }
 }
 
-// Đối chiếu
+function checkNumberForProperties(input) {
+    if(input.length < 2 || input.length > 4) {
+        throw "Số được nhập phải có từ 2 đến 4 chữ số.";
+    }
 
-function sendMatchCodeRequest() {
-    let inputCode = document.getElementById("match-input").value;
+    let markLetterChars = [true, true, true, true];
+    let markAvailableNums = [];
+    let letterCounter = 0;
 
-    socket.send(JSON.stringify({ type: "matchCode", inputCode: inputCode }));
-}
+    for (i in availableNumbers) {
+        markAvailableNums.push(true);
+    }
 
-function printMatchCodeResult(message) {
-    try {
-        if (message.charAt(message.length - 1) != '.') {
-            pricePay(matchCodeCost);
-            addSearchResult(message);
-        } else {
-            throw message;
+    for (let i = 0; i < input.length; i++) {
+        let mark = true;
+        for (let j = 0; j < 4; j++) {
+            if (input.charAt(i) == letterChars[j]) {
+                if (markLetterChars[j]) {
+                    letterCounter++;
+                    markLetterChars[j] = false;
+                    mark = false;
+                    break;
+                } else {
+                    throw "Các chữ số ở mật mã chỉ được sử dụng duy nhất một lần.";
+                }
+            }
         }
 
+        if (mark) {
+            for (let j = 0; j < availableNumbers.length; j++) {
+                if (((input.charAt(i) - '0') == availableNumbers[j]) && markAvailableNums[j]) {
+                    markAvailableNums[j] = false;
+                    mark = false;
+                    break;    
+                }
+            }
+
+            if (mark) {
+                throw "Chỉ được sử dụng các chữ số từ mật mã hoặc tập số được dùng và mỗi vị trí chỉ được sử dụng một lần.";
+            }
+        }
+    }
+
+    if (letterCounter < 2) {
+        throw "Phải sử dụng ít nhất hai chữ số từ mật mã.";
+    }
+}
+
+// Đối chiếu
+
+function matchCode() {
+    try {
+        let secretCodeString = decryptSecretCode().toString();
+        
+        while (secretCodeString.length != 4) {
+            secretCodeString = '0' + secretCodeString;
+        }
+
+        let inputCode = document.getElementById("match-input").value;
+
+        checkNumberForMatchCode(inputCode);
+
+        let numberAtRightPosition = 0;
+        let rightNumberButWrongPosition = 0;
+        let unmatchedPlaceAtAnswer = [true, true, true, true];
+        let unmatchedPlaceAtInput = [true, true, true, true];
+
+        for (let i = 0; i < 4; i++) {
+            if (inputCode.charAt(i) == secretCodeString.charAt(i)) {
+                numberAtRightPosition++;
+                unmatchedPlaceAtAnswer[i] = false;
+                unmatchedPlaceAtInput[i] = false;
+            }
+        }
+
+        for (let i = 0; i < 4; i++) {
+            if (unmatchedPlaceAtInput[i]) {
+                for (let j = 0; j < 4; j++) {
+                    if (i != j && unmatchedPlaceAtAnswer[j] && inputCode.charAt(i) == secretCodeString.charAt(j)) {
+                        rightNumberButWrongPosition++;
+                        unmatchedPlaceAtAnswer[j] = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        pricePay(matchCodeCost);
+        addSearchResult(inputCode + ": " + numberAtRightPosition + " chữ số đúng và ở đúng vị trí, " 
+                        + rightNumberButWrongPosition + " chữ số đúng nhưng ở sai vị trí.");
         document.getElementById("throw-error3").innerHTML = "";
     } catch(err) {
         document.getElementById("throw-error3").innerHTML = "Không hợp lệ! " + err;
+    }
+}
+
+function checkNumberForMatchCode(input) {
+    if (input.length != 4) {
+        throw "Số nhập vào phải có đúng 4 chữ số.";
+    }
+
+    let markAvailableNums = [];
+
+    for (i in availableNumbers) {
+        markAvailableNums.push(true);
+    }
+
+    for (let i = 0; i < input.length; i++) {
+        let mark = true;
+
+        if (!/^[0-9]$/.test(input.charAt(i))) {
+            throw "Không được sử dụng các ký tự không phải là các chữ số.";
+        }
+
+        for (let j = 0; j < availableNumbers.length; j++) {
+            if (((input.charAt(i) - '0') == availableNumbers[j]) && markAvailableNums[j]) {
+                markAvailableNums[j] = false;
+                mark = false;
+                break;    
+            }
+        }
+
+        if (mark) {
+            throw "Chỉ được sử dụng các chữ số từ tập số được dùng và mỗi vị trí chỉ được sử dụng một lần.";
+        }
+    }
+}
+
+// Quy đổi các chữ a,b,c,d về các số trong mật mã
+function exchangeLetterToNumber(latex) {
+    try {
+        let secretCodeString = decryptSecretCode().toString();
+        
+        while (secretCodeString.length != 4) {
+            secretCodeString = '0' + secretCodeString;
+        }
+
+        let exchangedExpression = "";
+        
+        for (let i = 0; i < latex.length; i++) {
+            let mark = true;
+
+            for (let j = 0; j < 4; j++) {
+                if (latex.charAt(i) == letterChars[j]) {
+                    exchangedExpression += "" + secretCodeString.charAt(j);
+                    mark = false;
+                    break;
+                }
+            }
+
+            if (mark) {
+                exchangedExpression += latex.charAt(i);
+            }
+        }
+
+        return exchangedExpression;
+    } catch(err) {
+        throw err;
     }
 }
 
@@ -248,35 +478,16 @@ async function submitTheAnswer() {
 
     if (!(answer >= 0 && answer <= 9999)) {
         document.getElementById("submit-answer").innerHTML = "Không hợp lệ. Mật mã phải nằm trong đoạn từ 0 đến 9999!";
+    } else if (answer == decryptSecretCode()) {
+        popupResult(true);
     } else {
-        socket.send(JSON.stringify({ type: "checkGuess", guess: answer }));
-    }
-}
+        document.getElementById("submit-answer").innerHTML = "Mật mã không chính xác. Mời thử lại!";
+        numOfSubmitRemaining--;
+        document.getElementById("remaining-submit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
 
-function executeTheSubmitResult(result, answer) {
-    try {
-        if (result == 'correct') {
-            popupResult(true, answer);
-        } else {
-            document.getElementById("submit-answer").innerHTML = "Mật mã không chính xác. Mời thử lại!";
-            numOfSubmitRemaining--;
-            document.getElementById("remaining-submit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
-
-            if (numOfSubmitRemaining == 0) {
-                findTheSecretCodeThenPopupWhenFalse();    
-            }
+        if (numOfSubmitRemaining == 0) {
+            popupResult(false);  
         }
-    } catch(err) {
-        document.getElementById("submit-answer").innerHTML = "Lỗi kết nối đến máy chủ.";
-    }
-}
-
-// Hàm dò mật mã bằng binary search rồi thông báo kết quả qua popup trong trường hợp thất bại
-function findTheSecretCodeThenPopupWhenFalse(message = "", lower = 0, upper = 9999) {
-    if (message == 'equal') {
-        popupResult(false, parseInt((lower + upper) / 2)); 
-    } else {
-        socket.send(JSON.stringify({ type: "compareSecretCodeWithMid", lower: lower, upper: upper }));
     }
 }
 
@@ -305,12 +516,12 @@ function showSlide(slide) {
 function changeStatus() {
     try {
         if (isPlaying) {
+            endCountDown();
+
             isPlaying = false;
-            
             searchedInformation = "";
             numOfBuyRemaining = buyNumberCost.length;
             numOfSubmitRemaining = maxNumOfSubmitAnswerTurn;
-            numOfSecondLeft = timesForEachPlay;
 
             document.getElementById("player-numbers").innerText = "";
             resetSlide();
@@ -325,8 +536,6 @@ function changeStatus() {
             lockScreen();
             document.getElementById("status").innerHTML = "&#9205";
             document.getElementById("status").style.backgroundColor = "#015901";
-
-            document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
 
             document.getElementById("buy-number-button").innerHTML = "🛒";
             document.getElementById("buy-number-button").style.display = "block";
@@ -343,7 +552,7 @@ function changeStatus() {
             document.getElementById("num-to-check-properties").value = "";
             document.getElementById("match-input").value = "";
         } else {
-            freeNumber();
+            freeNumbers();
             generateNewSecretCode();
 
             isPlaying = true;
@@ -352,14 +561,17 @@ function changeStatus() {
             document.getElementById("status").innerHTML = "&#8634";
             document.getElementById("status").style.backgroundColor = "#6c0703";
             document.getElementById("start-intro").style.display = "none";
-            document.getElementById("buy-number-button").innerHTML = "🛒 (🏷️" + buyNumberCost[0] + "s)";
+            document.getElementById("buy-number-button").innerHTML = "🛒 (- " + buyNumberCost[0] + "s)";
+
+            startCountDown();
         }
     } catch(err) {
         window.alert(err);
     }
 }
 
-function popupResult(isWon, correctAnswer) {
+//Popup thông báo kết quả lượt chơi
+function popupResult(isWon) {
     changeStatus();
 
     if (isWon) {
@@ -376,7 +588,7 @@ function popupResult(isWon, correctAnswer) {
         document.getElementById("close-popup").style.backgroundColor = "#6c0703";
     }
 
-    document.getElementById("correct-answer").innerHTML = "abcd = " + correctAnswer;
+    document.getElementById("correct-answer").innerHTML = "abcd = " + decryptSecretCode();
     document.getElementById("result-popup").style.display = "block";
     document.getElementById("all-screen").style.display = "block";
     lockScreen();
@@ -453,18 +665,26 @@ function resetSlide() {
 }
 
 
-//cài đặt bộ đếm thời gian
-setInterval(function countDown() {
-    if(isPlaying) {
+//bộ đếm thời gian
+function startCountDown() {
+    timer = setInterval(() => {
         numOfSecondLeft--;
         document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
-    }
 
-    if(numOfSecondLeft <= 0) {
-        findTheSecretCodeThenPopupWhenFalse();
-    }
-}, 1000);
+        if(numOfSecondLeft <= 0) {
+            popupResult(false)
+        }
+    }, 1000);
+}
 
+function endCountDown() {
+    clearInterval(timer);
+    timer = null;
+    numOfSecondLeft = timesForEachPlay;
+    document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
+}
+
+//Trừ thời gian cho mỗi lần dùng công cụ
 function pricePay(cost) {
     if (numOfSecondLeft < cost) {
         throw "Bạn không còn đủ thời gian để sử dụng công cụ này.";

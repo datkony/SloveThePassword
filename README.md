@@ -1,7 +1,6 @@
 # 🔐 SloveThePassword
 
-A fun and simple web-based password sloving game built with HTML/CSS/JS (frontend) and Node.js + Express (backend).  
-This project uses a **monorepo** structure and is deployed on [Render](https://render.com).
+Một trò chơi giải mật mã vui vẻ rèn luyện tư duy toán học.
 
 ---
 
@@ -15,10 +14,6 @@ Nguyễn Hoàng Đạt
 
 ```
 SloveThePassword
-├── backend
-│ ├── index.js
-│ ├── package.json
-│ └── .env
 ├── frontend
 │ ├── index.html
 │ ├── script.js
@@ -30,8 +25,7 @@ SloveThePassword
 
 ## 🚀 Live Demo
 
-- **Frontend**: [https://slove-the-password-frontend.onrender.com](https://slove-the-password-frontend.onrender.com)  
-- **Backend API**: [https://slove-the-password-backend.onrender.com](https://slove-the-password-backend.onrender.com)
+- **Frontend**: [https://datkony.github.io/SloveThePassword/frontend](https://datkony.github.io/SloveThePassword/frontend)  
 
 ---
 
