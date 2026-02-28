@@ -1,108 +1,136 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess The Code</title>
+    <title>Truy tìm mật mã</title>
+    <meta name="description"
+        content="Trò chơi giải đố: Truy tìm mật mã - Dùng các công cụ suy luận để tìm ra mật mã bí ẩn trong thời gian giới hạn!">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
 </head>
+
 <body>
-    <h1>Truy tìm mật mã</h1>
-    
+    <!-- CONFETTI CANVAS (Bước 5) -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- TOAST CONTAINER (Bước 5) -->
+    <div id="toast-container"></div>
+
+    <h1>🔐 Truy tìm mật mã</h1>
+
+    <!-- Subtitle: mật mã + help button -->
     <div id="sub-title-merge">
         <p id="introduction0">Mật mã: <b>abcd</b></p>
-        <button id="open-intro-popup" onclick="openIntroPopup()">?</button>
+        <button id="open-intro-popup" onclick="openIntroPopup()" title="Hướng dẫn chơi">?</button>
     </div>
 
-    <div>
+    <!-- Timer Row (Bước 2 + 5) -->
+    <div id="sub-timer-row">
         <button id="status" onclick="changeStatus()">&#9205</button>
-        <p id="timer"></p>
+        <div id="timer-display-merge" style="display: flex; flex: 1; align-items: center; gap: 10px; min-width: 0;">
+            <div id="timer-bar-wrapper">
+                <div id="timer-bar"></div>
+            </div>
+            <p id="timer">🕑 600s</p>
+        </div>
     </div>
 
+    <!-- Main 3-column Grid Layout (Bước 2) -->
     <div class="container">
+
+        <!-- COLUMN 1: Numbers & Actions -->
         <div class="first-column">
             <div id="current-number">
                 <div id="current-number-title-merge">
                     <h2>Số được dùng</h2>
-                    <button id="open-timer-intro-popup" onclick="openAvailableNumberIntroPopup()">?</button>
+                    <button id="open-timer-intro-popup" onclick="openAvailableNumberIntroPopup()"
+                        title="Tập số được dùng là gì?">?</button>
                 </div>
                 <p id="start-intro"></p>
                 <p id="player-numbers"></p>
             </div>
 
             <div id="buy" class="slide-active">
-                <h2>Mua một<br>chữ số ngẫu nhiên</h2>
-                <button class="action-button" id="buy-number-button" onclick="buyRandomNumber()">🛒</button>
+                <h2>Mua chữ số ngẫu nhiên</h2>
+                <button class="action-button" id="buy-number-button" onclick="buyRandomNumber()">🛒 Mua</button>
                 <div id="remaining-buy"></div>
                 <div id="throw-error4"></div>
             </div>
 
             <div id="type-answer">
-                <h2>Giải</h2>
+                <h2>Giải mã</h2>
                 <input type="number" id="answer" min="0" max="9999" placeholder="abcd = ?">
-                <button class="action-button" id="submit-button" onclick="submitTheAnswer()">&#8594</button>
+                <button class="action-button" id="submit-button" onclick="submitTheAnswer()">✔ Xác nhận</button>
                 <div id="submit-answer"></div>
                 <div id="remaining-submit"></div>
             </div>
         </div>
 
+        <!-- COLUMN 2: Tool Panel -->
         <div class="tool">
             <div class="nav">
                 <button id="tab1" onclick="showSlide(1)"></button>
                 <button id="tab2" onclick="showSlide(2)"></button>
                 <button id="tab3" onclick="showSlide(3)"></button>
             </div>
-            
+
             <div class="content">
                 <div id="intro-content">
-                    <p>Hãy lựa chọn một công cụ để xem cách thức và sử dụng nó</p>
+                    <p>🔍 Hãy chọn một công cụ để<br>thu thập manh mối!</p>
                 </div>
 
+                <!-- Tool 1: So sánh biểu thức -->
                 <div id="compare-expression" class="slide">
                     <button class="tool-intro" id="tool-intro1" onclick="changeIntro1Status()">?</button>
                     <p class="tool-intro-content" id="compare-expression-intro">
-                        <b>Dùng các dấu +, -, *, ()</b> tạo một biểu thức chứa <b>3 chữ số trong mật mã <br>
-                        (a, b, c, d)</b> và một biểu thức chứa <b>3 chữ số trong tập số được dùng</b><br>
+                        <b>Dùng các dấu +, -, *, ()</b> tạo một biểu thức chứa <b>3 chữ số trong mật mã
+                            (a, b, c, d)</b> và một biểu thức chứa <b>3 chữ số trong tập số được dùng</b><br>
                         để nhận được <b>kết quả so sánh</b> giữa hai biểu thức trên (&gt, &lt, =)<br><br>
                         ⚠️ <b>Số lượng từng loại dấu (kể cả dấu ngoặc)</b> và <b>thứ tự các dấu</b><br>
                         ở hai biểu thức phải <b>giống hệt nhau</b><br>
-                        ⚠️ <b>Không được ghép</b> bất kỳ 2 chữ số trở lên nào để tạo thành số mới<br><br>
+                        ⚠️ <b>Không được ghép</b> bất kỳ 2 chữ số trở lên nào để tạo thành số mới
                     </p>
 
                     <div>
-                        <label>Biểu thức 1 (a, b, c, d):<br></label>
-                        <input type="text" id="expression1"><br><br>
+                        <label>Biểu thức 1 (a, b, c, d):</label>
+                        <input type="text" id="expression1">
                     </div>
 
                     <div>
-                        <label>Biểu thức 2 (Số được dùng):<br></label>
-                        <input type="text" id="expression2"><br><br>
+                        <label>Biểu thức 2 (Số được dùng):</label>
+                        <input type="text" id="expression2">
                     </div>
 
                     <button class="action-button" id="compare" onclick="compareExpressions()">So sánh</button>
                     <div id="throw-error1"></div>
                 </div>
-                
+
+                <!-- Tool 2: Ghép số / kiểm tra tính chất -->
                 <div id="check-properties" class="slide">
                     <button class="tool-intro" id="tool-intro2" onclick="changeIntro2Status()">?</button>
                     <p class="tool-intro-content" id="check-properties-intro">
-                        Tạo một số có <b>từ 2 đến 4 chữ số</b> gồm <b>các chữ số ở trong mật mã (a, b, c, d) hoặc ở trong tập số được dùng</b>
-                        để nhận được <b>tính chất</b> của số đó (chính phương, nguyên tố, hoàn hảo, không thuộc cả 3 loại trên)<br><br>
-                        ⚠️ Số được tạo phải có <b>ít nhất 2 chữ số từ mật mã</b><br><br>
+                        Tạo một số từ <b>2 đến 4 chữ số</b> trong <b>mật mã (a, b, c, d) hoặc tập số được dùng</b>
+                        để nhận được <b>tính chất</b> của số đó (chính phương, nguyên tố, hoàn hảo, không thuộc cả 3
+                        loại trên)<br><br>
+                        ⚠️ Số được tạo phải có <b>ít nhất 2 chữ số từ mật mã</b>
                     </p>
-                    <label><br>Số tạo được:</label>
+                    <label>Số tạo được:</label>
                     <input type="text" id="num-to-check-properties">
-                    <button class="action-button" id="check-properties-button" onclick="checkProperties()">Kiểm tra</button>
+                    <button class="action-button" id="check-properties-button" onclick="checkProperties()">Kiểm
+                        tra</button>
                     <div id="throw-error2"></div>
                 </div>
-                
+
+                <!-- Tool 3: Đối chiếu mật mã -->
                 <div id="match-code" class="slide">
                     <button class="tool-intro" id="tool-intro3" onclick="changeIntro3Status()">?</button>
-                    <p class="tool-intro-content" id="match-code-intro">Tạo một số có <b>4 chữ số</b> gồm <b>các chữ số ở trong tập số được dùng</b>
-                        để đối chiếu với mật mã và nhận được <b>số chữ số đúng và ở đúng vị trí, số chữ số đúng nhưng ở sai vị trí</b><br><br>
+                    <p class="tool-intro-content" id="match-code-intro">Tạo một số từ <b>4 chữ số</b> trong <b>tập số được dùng</b>
+                        để đối chiếu với mật mã và nhận được <b>số chữ số đúng và ở đúng vị trí, số chữ số đúng nhưng ở
+                            sai vị trí</b>
                     </p>
-                    <label><br>Số tạo được:</label>
+                    <label>Số tạo được:</label>
                     <input type="text" id="match-input" maxlength="4">
                     <button class="action-button" id="match-code-button" onclick="matchCode()">Đối chiếu</button>
                     <div id="throw-error3"></div>
@@ -110,27 +138,35 @@
             </div>
         </div>
 
-        <div class="search-box">
-            <h2>Kết quả</h2>
-            <br>
+        <!-- COLUMN 3: Search / clue log -->
+        <div class="search-box" id="search-box-id">
+            <h2>📋 Nhật ký manh mối</h2>
             <div id="search-log"></div>
         </div>
     </div>
 
+    <!-- FTUE Overlay & Tooltip (Bước 4) -->
+    <div id="ftue-overlay"></div>
+    <div id="ftue-tooltip">
+        <div id="ftue-step-counter"></div>
+        <p id="ftue-text"></p>
+        <button id="ftue-next" class="action-button"></button>
+    </div>
+
+    <!-- All-screen overlay for popups -->
     <div id="all-screen">
+        <!-- Popup hướng dẫn chơi -->
         <div id="intro-popup">
             <button id="close-intro-popup" onclick="closeIntroPopup()">&#10006</button>
 
             <div id="intro-popup-content">
-                <h2>Cách chơi</h2>
+                <h2>📖 Cách chơi</h2>
                 <h3>1️⃣ Thu thập các chữ số</h3>
 
                 <div class="container-tutorial">
                     <div class="first-column-tutorial">
                         <p id="current-number">Mật mã: <b>abcd</b></p>
-
                         <p>➕</p>
-
                         <div id="current-number">
                             <h2>Số được dùng</h2>
                             <p id="player-numbers-tutorial">1 1 2 3</p>
@@ -147,52 +183,31 @@
                 <h3>2️⃣ Đưa vào các công cụ &#8680 Thu thập manh mối</h3>
 
                 <div class="container-tutorial-for-tool">
-                    <div class="first-column-tutorial-tool">
-                        So sánh
-                    </div>
-
+                    <div class="first-column-tutorial-tool">So sánh</div>
                     <div class="second-column-tutorial-tool">
                         <p id="input-box-tutorial">a + b</p>
                         <p id="input-box-tutorial">1 + 3</p>
                     </div>
-
                     <p id="infer-icon">⮕</p>
-
-                    <div class="third-column-tutorial-tool">
-                        a + b &lt 1 + 3
-                    </div>
+                    <div class="third-column-tutorial-tool">a + b &lt 1 + 3</div>
                 </div>
 
                 <div class="container-tutorial-for-tool">
-                    <div class="first-column-tutorial-tool">
-                        Ghép số
-                    </div>
-
+                    <div class="first-column-tutorial-tool">Ghép số</div>
                     <div class="second-column-tutorial-tool">
                         <p id="input-box-tutorial">12ad</p>
                     </div>
-
                     <p id="infer-icon">⮕</p>
-
-                    <div class="third-column-tutorial-tool">
-                        12ad là số chính phương
-                    </div>
+                    <div class="third-column-tutorial-tool">12ad là số chính phương</div>
                 </div>
 
                 <div class="container-tutorial-for-tool">
-                    <div class="first-column-tutorial-tool">
-                        Đối chiếu
-                    </div>
-
+                    <div class="first-column-tutorial-tool">Đối chiếu</div>
                     <div class="second-column-tutorial-tool">
                         <p id="input-box-tutorial">2113</p>
                     </div>
-
                     <p id="infer-icon">⮕</p>
-
-                    <div class="third-column-tutorial-tool">
-                        2113: 1 chữ số đúng và ở đúng vị trí, 0 chữ số đúng nhưng ở sai vị trí
-                    </div>
+                    <div class="third-column-tutorial-tool">2113: 1 đúng vị trí, 0 sai vị trí</div>
                 </div>
 
                 <div class="container-tutorial"></div>
@@ -206,29 +221,21 @@
                             <p id="input-box-tutorial">abcd = 2025 ✅</p>
                         </div>
                     </div>
-
                     <p id="infer-icon">⮕</p>
-
                     <div class="second-column-tutorial-submit">
-                        <p id="success-tutorial">Giải mã thành công</p>
+                        <p id="success-tutorial">Giải mã thành công 🎉</p>
                     </div>
                 </div>
 
-                <h3>⚠️ Mỗi lượt sử dụng công cụ sẽ bị trừ đi một lượng thời gian bằng giá của công cụ đó</h3>
+                <h3>⚠️ Mỗi lượt dùng công cụ sẽ bị trừ thời gian bằng giá của công cụ đó</h3>
 
                 <div class="container-tutorial">
                     <div>
                         <p id="timer-tutorial">🕑 600s</p>
-
                         <p>➕</p>
-
-                        <div id="price-tutorial">
-                            - 20s
-                        </div>
+                        <div id="price-tutorial">- 20s</div>
                     </div>
-
                     <p id="infer-icon">⮕</p>
-
                     <div>
                         <p id="timer-tutorial">🕑 580s</p>
                     </div>
@@ -236,13 +243,15 @@
             </div>
         </div>
 
+        <!-- Popup tập số được dùng -->
         <div id="available-number-intro-popup">
             <button id="close-available-number-intro-popup" onclick="closeAvailableNumberIntroPopup()">&#10006</button>
 
             <div id="available-number-intro-popup-content">
-                <h2>Tập số được dùng</h2>
+                <h2>📦 Tập số được dùng</h2>
                 <p>
-                    ⚠️ Mỗi lần sử dụng công cụ <b>chỉ được phép dùng các chữ số có sẵn trong mật mã (a, b, c, d) và tập số được dùng</b>,<br>
+                    ⚠️ Mỗi lần sử dụng công cụ <b>chỉ được phép dùng các chữ số có sẵn trong mật mã (a, b, c, d) và tập
+                        số được dùng</b>,<br>
                     với <b>số lần sử dụng của mỗi chữ số không vượt quá số lần xuất hiện của chúng</b> trong hai tập đó
                 </p>
 
@@ -266,6 +275,7 @@
             </div>
         </div>
 
+        <!-- Popup kết quả -->
         <div id="result-popup">
             <h1 id="result-title"></h1>
             <p id="result-content"></p>
@@ -273,7 +283,8 @@
             <button id="close-popup" onclick="closePopup()"></button>
         </div>
     </div>
-        
+
     <script src="script.js"></script>
 </body>
+
 </html>
