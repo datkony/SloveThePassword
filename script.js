@@ -29,6 +29,18 @@ let isMatchCodeIntroDisplay = false;
 let isFTUEActive = false;
 let currentFTUEStep = 0;
 
+// FTUE Toggle Initialization
+const ftueToggle = document.getElementById('ftue-toggle');
+if (ftueToggle) {
+    // Luôn mặc định là bật khi load trang theo yêu cầu
+    ftueToggle.checked = true;
+
+    // Lưu lại lựa chọn trong phiên chơi nếu người dùng thay đổi
+    ftueToggle.addEventListener('change', () => {
+        localStorage.setItem("showTutorialOnStart", ftueToggle.checked);
+    });
+}
+
 document.getElementById("start-intro").innerHTML = "Khởi điểm: " + numOfFreeNumbers + " chữ số";
 
 document.getElementById("compare-expression").style.display = "none";
@@ -40,9 +52,9 @@ document.getElementById("remaining-buy").innerHTML = "Còn " + numOfBuyRemaining
 document.getElementById("remaining-submit").innerHTML = "Còn " + numOfSubmitRemaining + " lượt";
 document.getElementById("timer").innerHTML = "🕑 " + numOfSecondLeft + "s";
 
-document.getElementById("tab1").innerHTML = "So sánh<br/>- " + compareExpressionCost + "s";
-document.getElementById("tab2").innerHTML = "Ghép số<br/>- " + checkPropertiesCost + "s";
-document.getElementById("tab3").innerHTML = "Đối chiếu<br/>- " + matchCodeCost + "s";
+document.getElementById("tab1").innerHTML = "SO SÁNH<br/>- " + compareExpressionCost + "s";
+document.getElementById("tab2").innerHTML = "GHÉP SỐ<br/>- " + checkPropertiesCost + "s";
+document.getElementById("tab3").innerHTML = "ĐỐI CHIẾU<br/>- " + matchCodeCost + "s";
 
 document.getElementById("compare-expression-intro").style.display = "none";
 document.getElementById("check-properties-intro").style.display = "none";
@@ -739,7 +751,12 @@ function changeStatus() {
             document.getElementById("start-intro").style.display = "none";
             document.getElementById("buy-number-button").innerHTML = "🛒 Mua (- " + buyNumberCost[0] + "s)";
 
-            startFTUE();
+            if (ftueToggle && ftueToggle.checked) {
+                startFTUE();
+            } else {
+                unlockScreen();
+                startCountDown();
+            }
         }
     } catch (err) {
         showToast(String(err), 'error');
@@ -946,7 +963,7 @@ function closeAvailableNumberIntroPopup() {
 const FTUE_STEPS = [
     {
         target: "sub-title-merge",
-        text: "Mật mã là một số trong khoảng từ 0-9999 được mã hóa thành abcd với a,b,c,d là 4 chữ số.<br><br><b>Nhiệm vụ của bạn là phải GIẢI ĐƯỢC MẬT MÃ TRONG THỜI GIAN QUY ĐỊNH</b>",
+        text: "Mật mã là một số trong khoảng từ <i>0-9999</i> được mã hóa thành <b>abcd</b> với a,b,c,d là 4 chữ số.<br><br><b>Nhiệm vụ của bạn là phải GIẢI ĐƯỢC MẬT MÃ TRONG THỜI GIAN QUY ĐỊNH</b>",
         action: "next"
     },
     {
@@ -961,17 +978,17 @@ const FTUE_STEPS = [
     },
     {
         target: "current-number",
-        text: "Đây là tập số được dùng. Bạn chỉ được phép dùng các chữ số trong tập số này.",
+        text: "Đây là tập số được dùng. Bạn chỉ được phép dùng các chữ số trong tập số này.<br><br>Trong mỗi lượt sử dụng, bạn KHÔNG ĐƯỢC PHÉP DÙNG BẤT KỲ CHỮ SỐ NÀO LẶP LẠI QUÁ SỐ LẦN XUẤT HIỆN CỦA NÓ.",
         action: "next"
     },
     {
         target: "buy",
-        text: "Bạn có thể mua thêm TỐI ĐA " + buyNumberCost.length + " chữ số qua công cụ này.<br><br>Mỗi lần mua bạn sẽ bị trừ một thời gian nhất định.",
+        text: "Bạn có thể mua thêm TỐI ĐA " + buyNumberCost.length + " chữ số qua công cụ này.<br><br>Mỗi lần mua bạn sẽ bị trừ một lượng thời gian nhất định.",
         action: "next"
     },
     {
         target: "tool",
-        text: "Bạn sẽ thu thập manh mối thông qua các công cụ sau.",
+        text: "Bạn sẽ thu thập manh mối thông qua các công cụ sau.<br><br>Mỗi lượt sử dụng bạn cũng sẽ bị trừ một lượng thời gian nhất định.",
         action: "next"
     },
     {
@@ -987,7 +1004,7 @@ const FTUE_STEPS = [
     },
     {
         target: "check-properties",
-        text: "Đây là công cụ Ghép số, bạn sẽ nhập một số độ dài từ 2 đến 4 chữ số lấy từ các chữ số trong mật mã hoặc tập số được dùng.<br><br>Hãy nhập thử và nhấn Kiểm tra!",
+        text: "Đây là công cụ Ghép số, bạn sẽ nhập một số có từ 2 đến 4 chữ số bằng các chữ số trong mật mã hoặc tập số được dùng.<br><br>Hãy nhập thử và nhấn Kiểm tra!",
         action: "waitForCheckProperties",
         setup: function () { showSlide(2); }
     },
@@ -998,7 +1015,7 @@ const FTUE_STEPS = [
     },
     {
         target: "match-code",
-        text: "Đây là công cụ Đối chiếu, bạn sẽ nhập một số độ dài 4 chữ số lấy từ tập số được dùng.<br><br>Hãy thử nhập và ấn Đối chiếu!",
+        text: "Đây là công cụ Đối chiếu, bạn sẽ nhập một số có 4 chữ số bằng các chữ số trong tập số được dùng.<br><br>Hãy thử nhập và ấn Đối chiếu!",
         action: "waitForMatchCode",
         setup: function () { showSlide(3); }
     },
@@ -1055,6 +1072,10 @@ function stopFTUE() {
     });
 
     localStorage.setItem("ftueHasCompletedV1", "true");
+
+    // Auto-uncheck toggle after first completion if desired, 
+    // but the user asked for control so we'll keep it as per their toggle setting.
+    // If they want it hidden, they'll uncheck it.
 
     // FIX 1: Giữ lại manh mối thu được trong hướng dẫn, không xóa search-log.
     // Chỉ xóa các ô input công cụ và thông báo lỗi để bắt đầu màn chơi sạch.
