@@ -787,18 +787,32 @@ input:focus+.slider {
     animation: tooltipPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     /* Prevent tooltip from capturing clicks on its non-interactive parts */
     pointer-events: none;
+    /* CSS Variable for dynamic arrow position */
+    --arrow-left: 50%;
 }
 
-/* Speech bubble arrow (down) */
-#ftue-tooltip::before {
-    content: '';
+/* Tooltip arrow based on position */
+#ftue-arrow {
     position: absolute;
-    bottom: -10px;
-    left: 50%;
+    width: 0;
+    height: 0;
+    left: var(--arrow-left);
     transform: translateX(-50%);
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-top: 10px solid rgba(124, 58, 237, 0.6);
+    display: none;
+}
+
+#ftue-tooltip.arrow-bottom #ftue-arrow {
+    display: block;
+    bottom: -10px;
+    border-top: 10px solid rgba(124, 58, 237, 0.8);
+}
+
+#ftue-tooltip.arrow-top #ftue-arrow {
+    display: block;
+    top: -10px;
+    border-bottom: 10px solid rgba(124, 58, 237, 0.8);
 }
 
 #ftue-text {

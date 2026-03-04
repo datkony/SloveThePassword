@@ -1164,6 +1164,7 @@ function showFTUEStep() {
 
                 // Positioning tooltip
                 tooltip.style.display = "block";
+                tooltip.classList.remove('arrow-top', 'arrow-bottom');
 
                 let tooltipHeight = tooltip.offsetHeight || 160;
                 let tooltipWidth = tooltip.offsetWidth || 320;
@@ -1171,16 +1172,36 @@ function showFTUEStep() {
                 let tooltipTop = rect.bottom + 14;
                 let tooltipLeft = rect.left + (rect.width / 2) - (tooltipWidth / 2);
 
+                // Check vertical bounds
                 if (tooltipTop > window.innerHeight - tooltipHeight - 10) {
                     tooltipTop = rect.top - tooltipHeight - 14;
                     if (tooltipTop < 10) tooltipTop = 10;
                 }
+
+                // Check horizontal bounds
                 if (tooltipLeft < 10) tooltipLeft = 10;
                 if (tooltipLeft + tooltipWidth > window.innerWidth) tooltipLeft = window.innerWidth - tooltipWidth - 10;
 
                 tooltip.style.transform = "none";
                 tooltip.style.top = tooltipTop + "px";
                 tooltip.style.left = tooltipLeft + "px";
+
+                // Set arrow class based on relative position
+                let targetCenterY = rect.top + rect.height / 2;
+                let tooltipCenterY = tooltipTop + tooltipHeight / 2;
+
+                if (tooltipTop > rect.top) {
+                    tooltip.classList.add('arrow-top');
+                } else {
+                    tooltip.classList.add('arrow-bottom');
+                }
+
+                // Calculate arrow horizontal position
+                let targetCenterX = rect.left + rect.width / 2;
+                let arrowX = targetCenterX - tooltipLeft;
+                // Clamp arrow position so it doesn't overflow tooltip curve
+                arrowX = Math.max(25, Math.min(tooltipWidth - 25, arrowX));
+                tooltip.style.setProperty('--arrow-left', arrowX + 'px');
             };
 
             updateGeometry();
@@ -1191,6 +1212,7 @@ function showFTUEStep() {
         // Không có target → overlay phủ toàn màn hình bình thường (không clip)
         overlay.style.clipPath = "";
         tooltip.style.display = "block";
+        tooltip.classList.remove('arrow-top', 'arrow-bottom');
         tooltip.style.top = "40%";
         tooltip.style.left = "50%";
         tooltip.style.transform = "translate(-50%, -50%)";
