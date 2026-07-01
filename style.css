@@ -154,6 +154,108 @@ body.ftue-active .switch-label {
 }
 
 /* =====================
+   LANGUAGE SELECTION (BILINGUAL BUTTONS)
+   ===================== */
+
+/* Giữ nguyên logic ẩn/hiện text theo ngôn ngữ của trang */
+html[lang="vi"] .lang-en {
+    display: none !important;
+}
+html[lang="en"] .lang-vi {
+    display: none !important;
+}
+
+/* Cụm bọc bên ngoài nút */
+.language-group {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+}
+
+/* KHUNG CHỨA CHÍNH: Giữ nguyên nền tối và viền tím cố định */
+#lang-toggle-container {
+    position: relative;
+    display: flex;
+    width: 96px; /* Độ rộng vừa vặn cho 2 nút bên trong */
+    height: 36px;
+    cursor: pointer;
+    background-color: #1e1233; /* Giữ nguyên màu nền tối */
+    border: 0.5px solid #6c5ce7;  /* GIỮ NGUYÊN VIỀN TÍM CỐ ĐỊNH BẤT KỂ NGÔN NGỮ */
+    border-radius: 30px;        /* Bo tròn hình quả trứng như ban đầu */
+    padding: 3px;               /* Tạo khoảng trống để nút chọn NẰM GỌN BÊN TRONG, không chạm viền */
+    box-sizing: border-box;
+}
+
+/* Ẩn checkbox mặc định */
+#language-toggle {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+/* LỚP BẢO VỆ NỀN CHUNG */
+.lang-slider {
+    position: absolute;
+    top: 3px; left: 3px; right: 3px; bottom: 3px; /* Định vị khớp với padding của container */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Xóa bỏ hoàn toàn hiệu ứng trượt tròn cũ */
+.lang-slider:before {
+    display: none !important;
+}
+
+/* NÚT BẤM BÊN TRONG: Khi được chọn sẽ có khối nền nổi bật */
+.flag-option {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.4); /* Chữ mặc định mờ khi chưa chọn */
+    border-radius: 20px; /* Bo tròn tương thích với khung ngoài */
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+/* --- TRẠNG THÁI ACTIVE: NÚT CHỌN NẰM GỌN BÊN TRONG --- */
+
+/* MẶC ĐỊNH (Khi chưa check -> Chọn VN): Khối nền của nút VN sáng lên */
+#language-toggle:not(:checked) + .lang-slider #label-vi {
+    background-color: #6c5ce7; /* Màu tím của nút được chọn */
+    color: #ffffff; /* Chữ trắng sáng hẳn lên */
+}
+
+/* KHI CLICK (Khi đã check -> Chọn EN): Khối nền chuyển sang nút EN, nút VN ẩn nền đi */
+#language-toggle:checked + .lang-slider #label-en {
+    background-color: #6c5ce7; /* Màu tím của nút được chọn */
+    color: #ffffff;
+}
+
+#language-toggle:checked + .lang-slider #label-vi {
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Giữ nguyên responsive cho mobile */
+@media (max-width: 600px) {
+    .language-group {
+        top: 10px;
+        left: 10px;
+        gap: 6px;
+    }
+}
+
+/* =====================
    TOGGLE SWITCH (SETTINGS)
    ===================== */
 .settings-group {

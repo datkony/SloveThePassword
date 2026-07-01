@@ -1,4 +1,4 @@
-# 🔐 SloveThePassword
+# 🔐 FindingThePassword
 ---
 ## 1. Introduction
 
@@ -23,7 +23,7 @@ Người chơi có thể mua thêm số (có giới hạn số lần mua) cũng 
 
 ## 3. Where to play 🎮
 
-[https://datkony.github.io/SloveThePassword/](https://datkony.github.io/SloveThePassword/)  
+[https://datkony.github.io/FindingThePassword/](https://datkony.github.io/FindingThePassword/)  
 
 
 ---
